@@ -1,4 +1,4 @@
-const validateToken = (req, res) => {
+const validateToken = (req, res, next) => {
     try {
         const token = req.cookies.token;
         if (!token) {

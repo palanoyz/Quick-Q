@@ -8,9 +8,10 @@ const userRouter = require("./routers/userRouter");
 
 
 // variables config
+const app = express();
 const PORT = 5000;
 const MONGO_URI = "mongodb+srv://kritamet:1234@cluster0.kdvkhdy.mongodb.net/Quick-Q";
-const app = express();
+const secret_jwt = "GN000"; module.exports = { secret_jwt };
 
 app.use(cors(
     {
@@ -21,9 +22,7 @@ app.use(cors(
 app.use(cookieParser());
 app.use(express.json());
 app.get("/", async (req, res) => {
-    res.send({
-        message: "test server.js",
-    });
+    res.send({ message: "test server.js" });
 });
 
 // router zone

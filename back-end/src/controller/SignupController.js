@@ -29,7 +29,7 @@ const signupController = async (req, res) => {
             user
         });
     } catch (err) {
-        console.log("signupController error", err.message);
+        console.log("signupController error: ", err.message);
     }
 };
 
