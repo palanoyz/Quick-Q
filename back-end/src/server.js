@@ -1,14 +1,17 @@
+// import zone
 express = require("express");
 cors = require("cors");
 mongoose = require("mongoose");
 cookieParser = require("cookie-parser");
+const userRouter = require("./routers/userRouter");
 
 
 
-PORT = 5000;
-MONGO_URI = "mongodb+srv://kritamet:1234@cluster0.kdvkhdy.mongodb.net/";
-
+// variables config
+const PORT = 5000;
+const MONGO_URI = "mongodb+srv://kritamet:1234@cluster0.kdvkhdy.mongodb.net/Quick-Q";
 const app = express();
+
 app.use(cors(
     {
         origin: "http://localhost:3000",
@@ -17,14 +20,14 @@ app.use(cors(
 ));
 app.use(cookieParser());
 app.use(express.json());
-
-
-
 app.get("/", async (req, res) => {
     res.send({
-        message: "testๆ",
+        message: "test server.js",
     });
 });
+
+// router zone
+app.use("/api/user", userRouter);
 
 app.listen(PORT, async () => {
     try {
