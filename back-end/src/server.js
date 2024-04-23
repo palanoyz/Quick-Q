@@ -21,8 +21,12 @@ app.get("/", async (req, res) => {
     res.send({ message: "test server.js" });
 });
 
+
+
 // router zone
 app.use("/api/user", userRouter);
+
+
 
 app.listen(PORT, async () => {
     try {
