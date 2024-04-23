@@ -1,5 +1,6 @@
 // import zone
 express = require("express");
+const { PORT, MONGO_URI } = require("./config/config");
 cors = require("cors");
 mongoose = require("mongoose");
 cookieParser = require("cookie-parser");
@@ -7,12 +8,7 @@ const userRouter = require("./routers/userRouter");
 
 
 
-// variables config
 const app = express();
-const PORT = 5000;
-const MONGO_URI = "mongodb+srv://kritamet:1234@cluster0.kdvkhdy.mongodb.net/Quick-Q";
-const secret_jwt = "GN000"; module.exports = { secret_jwt };
-
 app.use(cors(
     {
         origin: "http://localhost:3000",
