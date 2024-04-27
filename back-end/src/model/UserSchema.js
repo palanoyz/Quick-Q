@@ -13,17 +13,25 @@ const UserModel = model("User", User);
 
 const Restaurant = new Schema({
     rest_name: String,
-    rest_type: String,
+    rest_type: {
+        type: Schema.Types.ObjectId,
+        ref: "RestaurantType",
+    },
     branch: String,
     location: String,
-    description: String,
     isVerified: Boolean,
     OwnerID: { 
         type: Schema.Types.ObjectId, 
         ref: "User" 
     },
+    rest_logo: String,
 });
 const RestaurantModel = model("Restaurant", Restaurant);
+
+const RestaurantType = new Schema({
+    rest_type: String,
+});
+const RestaurantTypeModel = model("RestaurantType", RestaurantType);
 
 const SeatType = new Schema({
     seat_type: String,
@@ -47,6 +55,7 @@ const Queue = new Schema({
         type: Schema.Types.ObjectId, 
         ref: "User" 
     },
+    queue_number: String,
 });
 const QueueModel = model("Queue", Queue);
 

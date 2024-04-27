@@ -5,6 +5,7 @@ cors = require("cors");
 mongoose = require("mongoose");
 cookieParser = require("cookie-parser");
 const userRouter = require("./routers/userRouter");
+const multer = require("multer");
 
 
 
@@ -20,6 +21,11 @@ app.use(express.json());
 app.get("/", async (req, res) => {
     res.send({ message: "test server.js" });
 });
+
+const multerMid = multer({
+    storage: multer.memoryStorage(),
+});
+app.use(multerMid.single("file"));
 
 
 

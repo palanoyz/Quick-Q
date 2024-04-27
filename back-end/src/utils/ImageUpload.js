@@ -1,7 +1,7 @@
 const { supabase } = require("../lib/supabase");
 
-const uploadImage = async (file) => {
-    const fileName = `/test/${Date.now()}.jpg`;
+const uploadImageLogo = async (file) => {
+    const fileName = `/logo/${Date.now()}.jpg`;
 
     const { error } = await supabase.storage
         .from("WebproImg")
@@ -21,4 +21,4 @@ const uploadImage = async (file) => {
     return data.publicUrl;
 };
 
-module.exports = { uploadImage }
+module.exports = { uploadImageLogo }

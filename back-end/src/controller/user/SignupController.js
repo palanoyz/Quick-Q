@@ -28,8 +28,8 @@ const signupController = async (req, res) => {
             message: "signup success",
             user
         });
-    } catch (err) {
-        console.log(err.message);
+    } catch (error) {
+        console.log(error.message);
     }
 };
 
