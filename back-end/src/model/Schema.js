@@ -20,14 +20,15 @@ const Restaurant = new Schema({
     branch: String,
     location: String,
     isVerified: Boolean,
-    OwnerID: { 
-        type: Schema.Types.ObjectId, 
-        ref: "User" 
+    OwnerID: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
     rest_logo: String,
 });
 const RestaurantModel = model("Restaurant", Restaurant);
 
+// for admin
 const RestaurantType = new Schema({
     rest_type: String,
 });
@@ -35,25 +36,25 @@ const RestaurantTypeModel = model("RestaurantType", RestaurantType);
 
 const SeatType = new Schema({
     seat_type: String,
-    RestaurantID: { 
-        type: Schema.Types.ObjectId, 
-        ref: "Restaurant" 
+    RestaurantID: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant"
     },
 });
 const SeatTypeModel = model("SeatType", SeatType);
 
 const Queue = new Schema({
-    RestaurantID: { 
-        type: Schema.Types.ObjectId, 
-        ref: "Restaurant" 
+    RestaurantID: {
+        type: Schema.Types.ObjectId,
+        ref: "Restaurant"
     },
-    SeatTypeID: { 
-        type: Schema.Types.ObjectId, 
-        ref: "SeatType" 
+    SeatTypeID: {
+        type: Schema.Types.ObjectId,
+        ref: "SeatType"
     },
-    UserID: { 
-        type: Schema.Types.ObjectId, 
-        ref: "User" 
+    UserID: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
     queue_number: String,
 });
@@ -61,4 +62,4 @@ const QueueModel = model("Queue", Queue);
 
 
 
-module.exports = { UserModel, RestaurantModel, SeatTypeModel, QueueModel };
+module.exports = { UserModel, RestaurantModel, RestaurantTypeModel, SeatTypeModel, QueueModel };

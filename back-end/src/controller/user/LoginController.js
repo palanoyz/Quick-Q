@@ -1,4 +1,4 @@
-const { UserModel } = require("../../model/UserSchema");
+const { UserModel } = require("../../model/Schema");
 const { comparePassword } = require("../../utils/PasswordManager");
 const jwt = require("jsonwebtoken");
 const { secret_jwt } = require("../../config/config");

@@ -1,4 +1,4 @@
-const { UserModel } = require("../../model/UserSchema");
+const { UserModel } = require("../../model/Schema");
 const { hashPassword } = require("../../utils/PasswordManager");
 
 const signupController = async (req, res) => {

@@ -1,4 +1,4 @@
-const { RestaurantModel } = require("../../../model/UserSchema");
+const { RestaurantModel } = require("../../../model/Schema");
 const jwt = require("jsonwebtoken");
 const { secret_jwt } = require("../../../config/config");
 const { uploadImageLogo } = require("../../../utils/ImageUpload");

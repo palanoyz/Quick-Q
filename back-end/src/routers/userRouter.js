@@ -19,6 +19,6 @@ router.get("/getuser", validateToken, getUser);
 router.get("/logout", logoutController);
 
 // restaurant
-router.post("/createShop", CreateShop);
+router.post("/createshop", CreateShop);
 
 module.exports = router;

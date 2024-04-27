@@ -5,6 +5,7 @@ cors = require("cors");
 mongoose = require("mongoose");
 cookieParser = require("cookie-parser");
 const userRouter = require("./routers/userRouter");
+const adminRouter = require("./routers/adminRouter");
 const multer = require("multer");
 
 
@@ -31,6 +32,7 @@ app.use(multerMid.single("file"));
 
 // router zone
 app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter);
 
 
 
