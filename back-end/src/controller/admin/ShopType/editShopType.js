@@ -1,6 +1,5 @@
 const { RestaurantTypeModel } = require("../../../model/Schema");
 const mongoose = require("mongoose");
-const { ObjectId } = require("mongoose");
 
 const editShopType = async (req, res) => {
     try {
