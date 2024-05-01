@@ -7,3 +7,10 @@
 * {
     font-family: 'Montserrat';
 }
+.slick-slide > div {
+    margin: 0 5px;
+}
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
