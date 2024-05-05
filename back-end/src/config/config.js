@@ -1,4 +1,4 @@
-const PORT = 5000;
+const PORT = 8000;
 const MONGO_URI = "mongodb+srv://kritamet:1234@cluster0.kdvkhdy.mongodb.net/Quick-Q";
 const secret_jwt = "GN000";
 const supabaseUrl = "https://lrxsabvitoecnhgmynmk.supabase.co";
