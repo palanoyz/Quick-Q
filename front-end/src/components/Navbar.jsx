@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiSearch, FiX } from 'react-icons/fi'; // Assuming you have the react-icons package installed
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -16,8 +17,9 @@ const Navbar = () => {
   return (
     <nav className="p-4 flex justify-between items-center shadow-xl">
       <div className="flex items-center space-x-2">
-        <span className="lg:ml-24 text-2xl sm:text-3xl font-bold text-primary mr-4">QuickQ</span>
-        <a className="">Explore</a> {/* Hidden on mobile */}
+        <Link to="/" className="lg:ml-24 text-2xl sm:text-3xl font-bold text-primary mr-4">QuickQ</Link>
+        
+        <Link to="/Explore" className="">Explore</Link> {/* Hidden on mobile */}
         <button
           className="bg-primary-light transition-all duration-300 transform hover:scale-105 text-black ml-4 text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-8 h-12"
           onClick={toggleSearchBar}
