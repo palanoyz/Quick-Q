@@ -1,4 +1,3 @@
-// CardComponent.js
 import PropTypes from 'prop-types';
 import { FaCheckCircle, FaEllipsisH } from 'react-icons/fa';
 
