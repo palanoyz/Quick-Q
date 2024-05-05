@@ -8,6 +8,7 @@ const User = new Schema({
     lastname: String,
     phoneNumber: String,
     birthDate: Date,
+    lineID: String,
 });
 const UserModel = model("User", User);
 
