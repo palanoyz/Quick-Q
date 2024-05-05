@@ -15,7 +15,7 @@ const isLogin = (req, res, next) => {
     try {
         const token = req.cookies.token;
         if (token) {
-            return res.status(401).json({ message: "You are logged in" });
+            return res.status(401).json({ message: "You are already logged in" });
         }
         next();
     } catch (error) {
@@ -23,4 +23,4 @@ const isLogin = (req, res, next) => {
     }
 }
 
-module.exports = { validateToken };
+module.exports = { validateToken, isLogin };
