@@ -10,6 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Explore" element={<Explore />} />
+          <Route path="*" element={<h1>404 not found</h1>} />
         </Routes>
       </Router>
     </>
