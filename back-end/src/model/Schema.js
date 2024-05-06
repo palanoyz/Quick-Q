@@ -9,6 +9,18 @@ const User = new Schema({
     phoneNumber: String,
     birthDate: Date,
     lineID: String,
+    RestaurantID: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Restaurant"
+        }
+    ],
+    QueueID: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Queue"
+        }
+    ]
 });
 const UserModel = model("User", User);
 
@@ -26,6 +38,12 @@ const Restaurant = new Schema({
         ref: "User"
     },
     rest_logo: String,
+    SeatTypeID: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "SeatType"
+        }
+    ],
 });
 const RestaurantModel = model("Restaurant", Restaurant);
 
@@ -37,10 +55,12 @@ const RestaurantTypeModel = model("RestaurantType", RestaurantType);
 
 const SeatType = new Schema({
     seat_type: String,
-    RestaurantID: {
-        type: Schema.Types.ObjectId,
-        ref: "Restaurant"
-    },
+    RestaurantID: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Restaurant"
+        }
+    ],
 });
 const SeatTypeModel = model("SeatType", SeatType);
 
