@@ -18,7 +18,6 @@ const Navbar = () => {
     <nav className="p-4 flex justify-between items-center shadow-xl">
       <div className="flex items-center space-x-2">
         <Link to="/" className="lg:ml-24 text-2xl sm:text-3xl font-bold text-primary mr-4">QuickQ</Link>
-        
         <Link to="/Explore" className="">Explore</Link> {/* Hidden on mobile */}
         <button
           className="bg-primary-light transition-all duration-300 transform hover:scale-105 text-black ml-4 text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-8 h-12"
