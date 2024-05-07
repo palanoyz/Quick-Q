@@ -10,7 +10,7 @@ const Card = ({ item }) => {
                     <img src={item.logo} className="h-12 mr-3" alt="Logo" />
                     <div>
                         <p className="text-lg font-semibold">{item.companyName}</p>
-                        <p className="text-sm text-gray-500">{item.description}</p>
+                        <p className="text-sm text-gray-500">{item.province}</p>
                     </div>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -28,7 +28,7 @@ Card.propTypes = {
         banner: PropTypes.string.isRequired,
         logo: PropTypes.string.isRequired,
         companyName: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
+        province: PropTypes.string.isRequired,
     }).isRequired,
 };
 
