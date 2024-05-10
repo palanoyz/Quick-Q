@@ -34,7 +34,7 @@ const signupController = async (req, res) => {
             user
         });
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
 };
 

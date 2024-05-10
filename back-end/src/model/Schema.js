@@ -38,6 +38,7 @@ const Restaurant = new Schema({
         ref: "User"
     },
     rest_logo: String,
+    rest_banner: String,
     SeatTypeID: [
         {
             type: Schema.Types.ObjectId,

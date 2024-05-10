@@ -1,7 +1,7 @@
 const { RestaurantModel } = require("../../../model/Schema");
 const jwt = require("jsonwebtoken");
 const { secret_jwt } = require("../../../config/config");
-const { uploadImageLogo } = require("../../../utils/ImageUpload");
+const { uploadImageLogo, uploadImageBanner } = require("../../../utils/ImageUpload");
 
 const CreateShop = async (req, res) => {
     try {
@@ -12,13 +12,14 @@ const CreateShop = async (req, res) => {
             location,
             isVerified,
         } = req.body;
-
         const file = req.file;
+
         const token = req.cookies.token;
         const validToken = jwt.verify(token, String(secret_jwt));
         if (!validToken) {
             return res.status(400).send("Invalid token");
         }
+
         if (!file) {
             return res.status(400).send("Please upload a file");
         }
