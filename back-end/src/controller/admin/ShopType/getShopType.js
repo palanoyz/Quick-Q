@@ -6,7 +6,7 @@ const getShopType = async (req, res) => {
         res.status(200).json({
             message: "All restaurant_type",
             type,
-        }); 
+        });
     } catch (error) {
         console.log(error);
     }
