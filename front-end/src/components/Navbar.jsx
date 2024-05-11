@@ -48,19 +48,23 @@ const Navbar = () => {
           </button>
           {showDropdown && (
             <div className="absolute top-10 right-0 bg-white border border-gray-300 shadow-lg rounded-lg p-2">
-              <a className="block py-2 px-4 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Login</a>
-              <a className="block py-2 px-4 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Sign Up</a>
+              <Link to="/Login" className="block py-2 px-4 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Login</Link>
+              <Link to="/Signup" className="block py-2 px-4 text-sm text-gray-800 hover:bg-gray-100 rounded-md">Sign Up</Link>
             </div>
           )}
         </div>
         {/* Show Desktop */}
         <div className="hidden lg:flex space-x-4">
-          <button className="border-primary border-2 transition-all duration-300 transform hover:scale-105 text-primary text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10">
-            Login
-          </button>
-          <button className="bg-primary transition-all duration-300 transform hover:scale-105 text-white text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10">
-            Sign Up
-          </button>
+          <Link to="/Login">
+            <button className="border-primary border-2 transition-all duration-300 transform hover:scale-105 text-primary text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10">
+              Login
+            </button>
+          </Link>
+          <Link to="/Signup">
+            <button className="bg-primary transition-all duration-300 transform hover:scale-105 text-white text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10">
+              Sign Up
+            </button>
+          </Link>
         </div>
       </div>
     </nav>
