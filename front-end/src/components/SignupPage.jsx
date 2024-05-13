@@ -1,30 +1,75 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
+import { axioslib } from '../lib/axioslib';
 
 const SignupPage = () => {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
+    const [user, setUser] = useState({
+        username: '',
+        email: '',
+        password: '',
+    });
+
+    const handleChange = (e) => {
+        setUser({
+            ...user,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async () => {
+        axioslib
+            .post('/api/user/signup', user)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        await navigate('/');
+    };
+
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
                 <h2 className="text-primary font-bold text-3xl mb-6 text-center">Sign Up</h2>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
-                        <input type="text" id="username" name="username" className="mt-1 p-2 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary" />
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            className="mt-1 p-2 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+                            onChange={handleChange}
+                        />
                     </div>
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" className="mt-1 p-2 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary" />
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            className="mt-1 p-2 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+                            onChange={handleChange}
+                        />
                     </div>
                     <div className="relative">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                        <input type={showPassword ? 'text' : 'password'} id="password" name="password" className="mt-1 p-2 pr-10 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary" />
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            id="password" name="password"
+                            className="mt-1 p-2 pr-10 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+                            onChange={handleChange}
+                        />
                         <button
                             type="button"
                             className="absolute inset-y-0 right-0 px-3 py-1"
