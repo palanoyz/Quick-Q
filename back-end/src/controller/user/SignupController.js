@@ -12,17 +12,19 @@ const signupController = async (req, res) => {
             firstname,
             lastname,
             phoneNumber,
-            birthDate
+            birthDate,
+            lineID
         } = req.body;
 
         const user = new UserModel({
             username,
             password: await hashPassword(password),
             email,
-            firstname,
-            lastname,
-            phoneNumber,
-            birthDate
+            firstname: firstname || "",
+            lastname: lastname || "",
+            phoneNumber: phoneNumber || "",
+            birthDate: birthDate || "",
+            lineID: lineID || ""
         })
 
         await user.save();

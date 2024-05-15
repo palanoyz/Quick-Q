@@ -1,9 +1,20 @@
 const { Schema, model } = require("mongoose");
 
 const User = new Schema({
-    username: String,
-    password: String,
-    email: String,
+    username: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true
+    },
     firstname: String,
     lastname: String,
     phoneNumber: String,
@@ -14,10 +25,12 @@ const UserModel = model("User", User);
 
 const Restaurant = new Schema({
     rest_name: String,
-    rest_type: {
-        type: Schema.Types.ObjectId,
-        ref: "RestaurantType",
-    },
+    rest_type: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "RestaurantType",
+        }
+    ],
     branch: String,
     location: String,
     isVerified: Boolean,
