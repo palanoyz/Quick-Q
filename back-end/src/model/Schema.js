@@ -25,12 +25,10 @@ const UserModel = model("User", User);
 
 const Restaurant = new Schema({
     rest_name: String,
-    rest_type: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "RestaurantType",
-        }
-    ],
+    rest_type: {
+        type: Schema.Types.ObjectId,
+        ref: "RestaurantType",
+    },
     branch: String,
     location: String,
     isVerified: Boolean,
