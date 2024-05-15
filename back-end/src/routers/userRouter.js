@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const { signupController } = require("../controller/user/SignupController");
 const { loginController } = require("../controller/user/LoginController");
 const { validateToken, isLogin } = require("../middleware/auth");
@@ -16,8 +17,8 @@ router.get("/", (req, res) => {
 });
 
 // auth
-router.post("/signup", isLogin, signupController);
-router.post("/login", loginController);
+router.post("/signup", signupController);
+router.post("/login", isLogin, loginController);
 router.get("/logout", logoutController);
 
 // user

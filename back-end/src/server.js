@@ -23,9 +23,9 @@ app.get("/", async (req, res) => {
 
 const multerMid = multer({
     storage: multer.memoryStorage(),
-});
-app.use(multerMid.single("file"));
-
+}).any();
+// app.use(multerMid.array("files"));
+app.use(multerMid);
 
 
 // router zone
@@ -42,3 +42,5 @@ app.listen(PORT, async () => {
         console.log("error : ", error);
     }
 });
+
+// node --watch ./src/server.js

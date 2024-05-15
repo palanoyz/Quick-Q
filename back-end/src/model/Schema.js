@@ -9,18 +9,6 @@ const User = new Schema({
     phoneNumber: String,
     birthDate: Date,
     lineID: String,
-    RestaurantID: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Restaurant"
-        }
-    ],
-    QueueID: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Queue"
-        }
-    ]
 });
 const UserModel = model("User", User);
 
