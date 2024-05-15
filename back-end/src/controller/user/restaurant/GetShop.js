@@ -1,6 +1,6 @@
 const { RestaurantModel } = require("../../../model/Schema");
 
-const GetAllShop = async (req, res) => {
+const GetShop = async (req, res) => {
     try {
         const shops = await RestaurantModel.find({});
         res.status(200).json(shops);
@@ -9,4 +9,4 @@ const GetAllShop = async (req, res) => {
     }
 }
 
-module.exports = { GetAllShop };
+module.exports = { GetShop };

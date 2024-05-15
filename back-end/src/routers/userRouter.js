@@ -1,12 +1,12 @@
 const express = require("express");
-const multer = require("multer");
 const { signupController } = require("../controller/user/SignupController");
 const { loginController } = require("../controller/user/LoginController");
-const { validateToken, isLogin } = require("../middleware/auth");
+const { validateToken } = require("../middleware/auth");
 const { getUser } = require("../controller/user/GetUser");
 const { logoutController } = require("../controller/user/LogoutController");
 const { CreateShop } = require("../controller/user/restaurant/CreateShop");
-const { GetAllShop } = require("../controller/user/restaurant/GetAllShop");
+const { GetShop } = require("../controller/user/restaurant/GetShop");
+const { GetShopByID } = require("../controller/user/restaurant/GetShopByID");
 const { DeleteShop } = require("../controller/user/restaurant/DeleteShop");
 const { updateUser } = require("../controller/user/UpdateUser");
 
@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 
 // auth
 router.post("/signup", signupController);
-router.post("/login", isLogin, loginController);
+router.post("/login", loginController);
 router.get("/logout", logoutController);
 
 // user
@@ -27,7 +27,8 @@ router.put("/updateuser/:userid", updateUser);
 
 // restaurant
 router.post("/createshop", CreateShop);
-router.get("/getallshop", GetAllShop);
+router.get("/getshop", GetShop); // get all restaurant
 router.delete("/deleteshop/:shopid", DeleteShop);
+router.get("/getshopbyid/:shopid", GetShopByID); // get restaurant by id
 
 module.exports = router;
