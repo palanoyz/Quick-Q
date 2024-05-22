@@ -17,18 +17,15 @@ const User = new Schema({
     },
     firstname: String,
     lastname: String,
-    phoneNumber: String,
-    birthDate: Date,
+    phonenumber: String,
+    birthdate: Date,
     lineID: String,
 });
 const UserModel = model("User", User);
 
 const Restaurant = new Schema({
     rest_name: String,
-    rest_type: {
-        type: Schema.Types.ObjectId,
-        ref: "RestaurantType",
-    },
+    rest_type: String,
     branch: String,
     location: String,
     isVerified: Boolean,
@@ -49,12 +46,18 @@ const RestaurantModel = model("Restaurant", Restaurant);
 
 // for admin
 const RestaurantType = new Schema({
-    rest_type: String,
+    rest_type: {
+        type: String,
+        unique: true
+    },
 });
 const RestaurantTypeModel = model("RestaurantType", RestaurantType);
 
 const SeatType = new Schema({
-    seat_type: String,
+    seat_type: {
+        type: String,
+        unique: true
+    },
     RestaurantID: [
         {
             type: Schema.Types.ObjectId,

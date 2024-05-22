@@ -10,7 +10,6 @@ const CreateShop = async (req, res) => {
             rest_type,
             branch,
             location,
-            isVerified,
         } = req.body;
         const files = req.files;
 
@@ -19,6 +18,7 @@ const CreateShop = async (req, res) => {
         if (!validToken) {
             return res.status(400).send("Invalid token");
         }
+        const OwnerID = validToken.UserID;
 
         // upload image
         const logoUrl = "";
@@ -34,9 +34,8 @@ const CreateShop = async (req, res) => {
 
         // const logoUrl = await uploadImageLogo(logoFile);
         // const bannerUrl = await uploadImageBanner(bannerFile);
-        const OwnerID = validToken.UserID;
 
-        const findRestType = await RestaurantTypeModel.findById(rest_type);
+        const findRestType = await RestaurantTypeModel.findOne({ rest_type: rest_type });
         if (!findRestType) {
             return res.status(400).send('Restaurant type not found');
         }
@@ -46,7 +45,7 @@ const CreateShop = async (req, res) => {
             rest_type,
             branch,
             location,
-            isVerified: isVerified || false,
+            isVerified: false,
             OwnerID,
             rest_logo: logoUrl,
             rest_banner: bannerUrl,
@@ -57,7 +56,7 @@ const CreateShop = async (req, res) => {
             shop
         });
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
 }
 

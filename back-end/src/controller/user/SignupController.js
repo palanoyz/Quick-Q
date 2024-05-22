@@ -11,8 +11,8 @@ const signupController = async (req, res) => {
             email,
             firstname,
             lastname,
-            phoneNumber,
-            birthDate,
+            phonenumber,
+            birthdate,
             lineID
         } = req.body;
 
@@ -22,8 +22,8 @@ const signupController = async (req, res) => {
             email,
             firstname: firstname || "",
             lastname: lastname || "",
-            phoneNumber: phoneNumber || "",
-            birthDate: birthDate || "",
+            phonenumber: phonenumber || "",
+            birthdate: birthdate || "",
             lineID: lineID || ""
         })
 
