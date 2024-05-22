@@ -4,8 +4,8 @@ const mongoose = require("mongoose");
 const DeleteShop = async (req, res) => {
     try {
         //const shopid = new mongoose.Types.ObjectId(req.params.shopid);
-        const { shopid } = req.params;
-        const deleteShop = await RestaurantModel.findByIdAndDelete(shopid);
+        const { shopID } = req.params;
+        const deleteShop = await RestaurantModel.findByIdAndDelete(shopID);
         if (!deleteShop) {
             return res.status(404).json({ message: "Restaurant not found" });
         }

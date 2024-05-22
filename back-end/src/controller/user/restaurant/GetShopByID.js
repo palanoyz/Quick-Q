@@ -2,8 +2,8 @@ const { RestaurantModel } = require("../../../model/Schema");
 
 const GetShopByID = async (req, res) => {
     try {
-        const { shopid } = req.params;
-        const result = await RestaurantModel.findById(shopid);
+        const { shopID } = req.params;
+        const result = await RestaurantModel.findById(shopID);
         if (!result) {
             return res.status(400).json({ message: "Restaurant not found" });
         }

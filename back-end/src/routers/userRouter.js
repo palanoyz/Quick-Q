@@ -26,13 +26,13 @@ router.get("/logout", logoutController);
 // user
 router.get("/getuser", validateToken, GetUser); // get all users
 router.get("/getuserbyid", GetUserByID); // must login
-router.put("/updateuser/:userid", UpdateUser);
+router.put("/updateuser/:userID", UpdateUser);
 
 // restaurant
 router.post("/createshop", CreateShop);
 router.get("/getshop", GetShop); // get all restaurant
-router.delete("/deleteshop/:shopid", DeleteShop);
-router.get("/getshopbyid/:shopid", GetShopByID); // get restaurant by id
+router.delete("/deleteshop/:shopID", DeleteShop);
+router.get("/getshopbyid/:shopID", GetShopByID); // get restaurant by id
 
 // Queue
 router.post("/generatequeue", GenerateQueue);

@@ -2,7 +2,7 @@ const { UserModel } = require("../../model/Schema");
 
 const UpdateUser = async (req, res) => {
     try {
-        const { userid } = req.params;
+        const { userID } = req.params;
         const updateFields = req.body;
         const result = await UserModel.findByIdAndUpdate(userid, updateFields, { new: true });
         if (!result) {
