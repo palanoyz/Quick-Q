@@ -31,7 +31,7 @@ const signupController = async (req, res) => {
 
         const playload = jwt.sign({ UserID: user._id }, String(secret_jwt), { algorithm: "HS256" });
         res.cookie("token", playload, { httpOnly: true });
-        res.status(200).send({
+        return res.status(200).send({
             message: "signup success",
             user
         });

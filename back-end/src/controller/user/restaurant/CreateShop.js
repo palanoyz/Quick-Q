@@ -52,7 +52,10 @@ const CreateShop = async (req, res) => {
             rest_banner: bannerUrl,
         });
         await shop.save();
-        res.status(201).send("Restaurant created successfully");
+        return res.status(201).send({
+            message: "Create restaurant success",
+            shop
+        });
     } catch (error) {
         console.log(error.message);
     }

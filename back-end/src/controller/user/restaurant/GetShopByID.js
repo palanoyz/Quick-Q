@@ -7,7 +7,7 @@ const GetShopByID = async (req, res) => {
         if (!result) {
             return res.status(400).json({ message: "Restaurant not found" });
         }
-        res.status(200).json(result);
+        return res.status(200).json(result);
     } catch (error) {
         console.log(error);
     }

@@ -7,7 +7,7 @@ const addShopType = async (req, res) => {
             rest_type
         });
         await type.save();
-        res.status(200).json({ message: "Add restaurant_type success" });
+        res.status(200).json({ message: "Add restaurant_type success", type });
     } catch (error) {
         console.log(error);
     }

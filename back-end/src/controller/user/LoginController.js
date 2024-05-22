@@ -18,7 +18,7 @@ const loginController = async (req, res) => {
         
         const payload = jwt.sign({ UserID: user._id }, String(secret_jwt), { algorithm: "HS256" })
         res.cookie("token", payload, { httpOnly: true })
-        res.status(200).json({ message: "Login success", payload: payload });
+        return res.status(200).json({ message: "Login success", payload: payload });
     } catch (error) {
         console.log(error.message);
     }

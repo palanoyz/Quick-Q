@@ -1,6 +1,4 @@
-const { QueueModel } = require("../../../model/Schema");
-const { UserModel, RestaurantModel, SeatTypeModel } = require("../../../model/Schema");
-const mongoose = require("mongoose");
+const { UserModel, RestaurantModel, SeatTypeModel, QueueModel } = require("../../../model/Schema");
 
 const GenerateQueue = async (req, res) => {
     try {
@@ -40,4 +38,4 @@ const GenerateQueue = async (req, res) => {
     }
 };
 
-module.exports = { CreateQueue };
+module.exports = { GenerateQueue };

@@ -8,7 +8,7 @@ const editShopType = async (req, res) => {
         if (!result) {
             return res.status(400).json({ message: "Restaurant_type not found" });
         }
-        res.status(200).json({ message: "Restaurant_type updated" });
+        res.status(200).json({ message: "Restaurant_type updated", result });
     } catch (error) {
         console.log(error);
     }

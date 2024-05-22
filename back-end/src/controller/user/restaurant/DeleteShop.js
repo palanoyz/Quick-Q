@@ -9,7 +9,7 @@ const DeleteShop = async (req, res) => {
         if (!deleteShop) {
             return res.status(404).json({ message: "Restaurant not found" });
         }
-        res.status(200).json({ message: "Restaurant deleted successfully" });
+        return res.status(200).json({ message: "Restaurant deleted successfully" });
     } catch (error) {
         console.log(error);
     }
