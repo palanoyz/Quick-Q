@@ -1,6 +1,6 @@
 const { UserModel } = require("../../model/Schema");
 
-const getUser = async (req, res) => {
+const GetUser = async (req, res) => {
     try {
         const user = await UserModel.find({});
         res.status(200).json(user);
@@ -9,4 +9,4 @@ const getUser = async (req, res) => {
     }
 }
 
-module.exports = { getUser }
+module.exports = { GetUser }

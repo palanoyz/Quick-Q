@@ -2,13 +2,15 @@ const express = require("express");
 const { signupController } = require("../controller/user/SignupController");
 const { loginController } = require("../controller/user/LoginController");
 const { validateToken } = require("../middleware/auth");
-const { getUser } = require("../controller/user/GetUser");
+const { GetUser } = require("../controller/user/GetUser");
+const { GetUserByID } = require("../controller/user/GetUserByID");
 const { logoutController } = require("../controller/user/LogoutController");
 const { CreateShop } = require("../controller/user/restaurant/CreateShop");
 const { GetShop } = require("../controller/user/restaurant/GetShop");
 const { GetShopByID } = require("../controller/user/restaurant/GetShopByID");
 const { DeleteShop } = require("../controller/user/restaurant/DeleteShop");
-const { updateUser } = require("../controller/user/UpdateUser");
+const { UpdateUser } = require("../controller/user/UpdateUser");
+const { GenerateQueue } = require("../controller/user/queue/GenerateQueue");
 
 const router = express.Router();
 
@@ -22,13 +24,17 @@ router.post("/login", loginController);
 router.get("/logout", logoutController);
 
 // user
-router.get("/getuser", validateToken, getUser);
-router.put("/updateuser/:userid", updateUser);
+router.get("/getuser", validateToken, GetUser); // get all users
+router.get("/getuserbyid", GetUserByID); // must login
+router.put("/updateuser/:userid", UpdateUser);
 
 // restaurant
 router.post("/createshop", CreateShop);
 router.get("/getshop", GetShop); // get all restaurant
 router.delete("/deleteshop/:shopid", DeleteShop);
 router.get("/getshopbyid/:shopid", GetShopByID); // get restaurant by id
+
+// Queue
+router.post("/generatequeue", GenerateQueue);
 
 module.exports = router;

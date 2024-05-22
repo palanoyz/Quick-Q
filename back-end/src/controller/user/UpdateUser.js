@@ -1,6 +1,6 @@
 const { UserModel } = require("../../model/Schema");
 
-const updateUser = async (req, res) => {
+const UpdateUser = async (req, res) => {
     try {
         const { userid } = req.params;
         const updateFields = req.body;
@@ -14,4 +14,4 @@ const updateUser = async (req, res) => {
     }
 }
 
-module.exports = { updateUser };
+module.exports = { UpdateUser };
