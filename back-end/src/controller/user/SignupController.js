@@ -20,13 +20,12 @@ const signupController = async (req, res) => {
             username,
             password: await hashPassword(password),
             email,
-            firstname: firstname || "",
-            lastname: lastname || "",
-            phonenumber: phonenumber || "",
-            birthdate: birthdate || "",
-            lineID: lineID || ""
+            firstname,
+            lastname,
+            phonenumber,
+            birthdate,
+            lineID
         })
-
         await user.save();
 
         const playload = jwt.sign({ UserID: user._id }, String(secret_jwt), { algorithm: "HS256" });

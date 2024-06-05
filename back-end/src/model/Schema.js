@@ -26,8 +26,12 @@ const UserModel = model("User", User);
 const Restaurant = new Schema({
     rest_name: String,
     rest_type: String,
-    branch: String,
-    location: String,
+    province: String,
+    seat_type: [
+        {
+            type: String
+        }
+    ],
     isVerified: Boolean,
     OwnerID: {
         type: Schema.Types.ObjectId,
@@ -35,16 +39,10 @@ const Restaurant = new Schema({
     },
     rest_logo: String,
     rest_banner: String,
-    SeatTypeID: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "SeatType"
-        }
-    ],
 });
 const RestaurantModel = model("Restaurant", Restaurant);
 
-// for admin
+// admin
 const RestaurantType = new Schema({
     rest_type: {
         type: String,
@@ -53,6 +51,7 @@ const RestaurantType = new Schema({
 });
 const RestaurantTypeModel = model("RestaurantType", RestaurantType);
 
+// admin
 const SeatType = new Schema({
     seat_type: {
         type: String,
