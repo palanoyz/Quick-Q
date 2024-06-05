@@ -6,6 +6,7 @@ const GetUser = async (req, res) => {
         return res.status(200).json(user);
     } catch (error) {
         console.log(error.message);
+        res.status(500).json(error);
     }
 }
 

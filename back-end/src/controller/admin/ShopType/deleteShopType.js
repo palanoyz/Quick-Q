@@ -10,6 +10,7 @@ const deleteShopType = async (req, res) => {
         return res.status(200).json({ message: "Delete restaurant_type success" });
     } catch (error) {
         console.log(error);
+        res.status(500).json(error);
     }
 }
 

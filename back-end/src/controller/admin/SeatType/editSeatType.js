@@ -11,6 +11,7 @@ const editSeatType = async (req, res) => {
         return res.status(200).json({ message: "Seat_type updated", result });
     } catch (error) {
         console.log(error);
+        res.status(500).json(error);
     }
 }
 

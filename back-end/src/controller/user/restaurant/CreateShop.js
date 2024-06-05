@@ -8,11 +8,11 @@ const CreateShop = async (req, res) => {
         const {
             rest_name,
             rest_type,
-            branch,
-            location,
+            province
         } = req.body;
         const files = req.files;
 
+        // get UserID
         const token = req.cookies.token;
         const validToken = jwt.verify(token, String(secret_jwt));
         if (!validToken) {
@@ -43,8 +43,7 @@ const CreateShop = async (req, res) => {
         const shop = new RestaurantModel({
             rest_name,
             rest_type,
-            branch,
-            location,
+            province,
             isVerified: false,
             OwnerID,
             rest_logo: logoUrl,
@@ -57,6 +56,7 @@ const CreateShop = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        res.status(500).json(error);
     }
 }
 

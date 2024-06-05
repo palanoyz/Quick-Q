@@ -10,6 +10,7 @@ const addSeatType = async (req, res) => {
         res.status(200).json({ message: "Add seat_type success", seat }); 
     } catch (error) {
         console.log(error);
+        res.status(500).json(error);
     }
 }
 

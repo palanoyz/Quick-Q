@@ -12,6 +12,7 @@ const DeleteShop = async (req, res) => {
         return res.status(200).json({ message: "Restaurant deleted successfully" });
     } catch (error) {
         console.log(error);
+        res.status(500).json(error);
     }
 }
 
