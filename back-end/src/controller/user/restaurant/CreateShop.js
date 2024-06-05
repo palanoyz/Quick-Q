@@ -1,4 +1,4 @@
-const { RestaurantModel, RestaurantTypeModel } = require("../../../model/Schema");
+const { RestaurantModel, UserModel } = require("../../../model/Schema");
 const jwt = require("jsonwebtoken");
 const { secret_jwt } = require("../../../config/config");
 const { uploadImageLogo, uploadImageBanner } = require("../../../utils/ImageUpload");
@@ -8,6 +8,7 @@ const CreateShop = async (req, res) => {
         const {
             rest_name,
             rest_type,
+            seat_type,
             province
         } = req.body;
         const files = req.files;
@@ -21,8 +22,8 @@ const CreateShop = async (req, res) => {
         const OwnerID = validToken.UserID;
 
         // upload image
-        const logoUrl = "";
-        const bannerUrl = "";
+        let logoUrl = "";
+        let bannerUrl = "";
         const logoFile = files.find(file => file.fieldname === 'rest_logo');
         const bannerFile = files.find(file => file.fieldname === 'rest_banner');
         if (logoFile) {
@@ -35,14 +36,10 @@ const CreateShop = async (req, res) => {
         // const logoUrl = await uploadImageLogo(logoFile);
         // const bannerUrl = await uploadImageBanner(bannerFile);
 
-        const findRestType = await RestaurantTypeModel.findOne({ rest_type: rest_type });
-        if (!findRestType) {
-            return res.status(400).send('Restaurant type not found');
-        }
-
         const shop = new RestaurantModel({
             rest_name,
             rest_type,
+            seat_type,
             province,
             isVerified: false,
             OwnerID,
@@ -50,10 +47,14 @@ const CreateShop = async (req, res) => {
             rest_banner: bannerUrl,
         });
         await shop.save();
-        return res.status(201).send({
-            message: "Create restaurant success",
-            shop
-        });
+
+        await UserModel.findByIdAndUpdate(
+            OwnerID,
+            { $addToSet: { RestaurantID: shop._id } },
+            { new: true }
+        );
+
+        return res.status(201).send({ message: "Create restaurant success", shop });
     } catch (error) {
         console.log(error);
         res.status(500).json(error);

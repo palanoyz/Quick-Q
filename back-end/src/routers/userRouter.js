@@ -35,6 +35,6 @@ router.delete("/deleteshop/:shopID", DeleteShop);
 router.get("/getshopbyid/:shopID", GetShopByID); // get restaurant by id
 
 // Queue
-router.post("/generatequeue", GenerateQueue);
+router.post("/generatequeue/:shopID", GenerateQueue);
 
 module.exports = router;
