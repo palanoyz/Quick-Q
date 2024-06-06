@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { axioslib } from '../lib/axioslib';
 
@@ -25,16 +24,15 @@ const SignupPage = () => {
         });
     };
 
-    const handleSubmit = async () => {
-        axioslib
-            .post('/api/user/signup', user)
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        await navigate('/');
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axioslib.post('/api/user/signup', user);
+            // Ensure no tokens are saved here
+            navigate('/login');
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -50,6 +48,7 @@ const SignupPage = () => {
                             name="username"
                             className="mt-1 p-2 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
                             onChange={handleChange}
+                            required
                         />
                     </div>
                     <div>
@@ -60,6 +59,7 @@ const SignupPage = () => {
                             name="email"
                             className="mt-1 p-2 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
                             onChange={handleChange}
+                            required
                         />
                     </div>
                     <div className="relative">
@@ -69,6 +69,7 @@ const SignupPage = () => {
                             id="password" name="password"
                             className="mt-1 p-2 pr-10 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
                             onChange={handleChange}
+                            required
                         />
                         <button
                             type="button"
@@ -83,7 +84,7 @@ const SignupPage = () => {
                     </button>
                 </form>
                 <p className="mt-4 text-sm text-center">
-                    Already have an account? <Link to="/Login" className="text-primary font-bold">Login</Link>
+                    Already have an account? <Link to="/login" className="text-primary font-bold">Login</Link>
                 </p>
             </div>
         </div>

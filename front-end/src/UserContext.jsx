@@ -6,30 +6,31 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [isLogin, setIsLogin] = useState(false);
+
+    const fetchUser = async () => {
+        try {
+            const response = await axioslib.get('/api/user/getuserbyid');
+            const { data, status } = response;
+            if (status === 200 && data?.message !== "Unauthorized") {
+                setUser(data);
+                setIsLogin(true);
+            } else {
+                setIsLogin(false);
+                setUser(undefined);
+            }
+        } catch (error) {
+            console.log(error.response?.status);
+            setIsLogin(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                try {
-                    const response = await axioslib.get('/api/user/getuserbyid', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    setUser(response.data);
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                    setUser(null);
-                }
-            } else {
-                setUser(null);
-            }
-        };
-
         fetchUser();
     }, []);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, isLogin, setIsLogin }}>
             {children}
         </UserContext.Provider>
     );

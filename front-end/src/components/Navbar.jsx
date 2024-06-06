@@ -7,7 +7,7 @@ import { axioslib } from '../lib/axioslib';
 const Navbar = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, isLogin, setIsLogin } = useContext(UserContext);
   const navigate = useNavigate();
 
   const toggleSearchBar = () => {
@@ -22,8 +22,8 @@ const Navbar = () => {
     e.preventDefault();
     try {
       await axioslib.post('/api/user/logout');
-      localStorage.removeItem('authToken');
       setUser(null);
+      setIsLogin(false);
       navigate('/');
     } catch (error) {
       console.error('Logout failed', error);
@@ -54,7 +54,7 @@ const Navbar = () => {
         />
       </div>
       <div className="flex space-x-4 lg:mr-24">
-        {user ? (
+        {isLogin ? (
           <div className="flex items-center space-x-4">
             <span className="text-sm lg:text-base font-bold text-primary">{user.username}</span>
             <button
