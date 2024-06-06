@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { FiSearch, FiX } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import { axioslib } from '../lib/axioslib';
@@ -48,10 +48,7 @@ const Navbar = () => {
           placeholder="Search"
           className={`px-4 py-2 rounded-3xl border border-gray-600 focus:outline-none focus:border-primary w-full ${showSearchBar ? 'visible' : 'invisible'}`}
         />
-        <FiX
-          className={`ml-2 cursor-pointer text-gray-500 hover:text-gray-700 ${showSearchBar ? 'block' : 'hidden'}`}
-          onClick={toggleSearchBar}
-        />
+
       </div>
       <div className="flex space-x-4 lg:mr-24">
         {isLogin ? (
@@ -68,7 +65,7 @@ const Navbar = () => {
           <>
             <div className="lg:hidden relative">
               <button
-                className="ml-2 border-primary border-2 transition-all duration-300 transform hover:scale-105 text-primary text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10"
+                className="ml-2 border-primary border-2 transition-all duration-300 transform hover:scale-105 hover:bg-primary hover:text-white text-primary text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10"
                 onClick={toggleDropdown}
               >
                 {!showDropdown ? 'Account' : 'Close'}

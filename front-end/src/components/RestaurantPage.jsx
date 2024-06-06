@@ -1,4 +1,4 @@
-const QueuePage = () => {
+const RestaurantPage = () => {
     return (
         <>
             <div className="text-center mt-12 text-text">
@@ -30,4 +30,4 @@ const QueuePage = () => {
     );
 };
 
-export default QueuePage;
+export default RestaurantPage;
