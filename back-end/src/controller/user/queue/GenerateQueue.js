@@ -15,7 +15,7 @@ const GenerateQueue = async (req, res) => {
             return res.status(400).json({ message: "User not found" });
         }
 
-        // Check if the provided seat_type is valid
+        // Check if seat_type input is valid
         const seatTypeIndex = restaurant.seat_type.findIndex(
             (type) => type.toLowerCase() === seat_type.toLowerCase()
         );
@@ -23,17 +23,29 @@ const GenerateQueue = async (req, res) => {
             return res.status(400).json({ message: "Invalid seat type" });
         }
 
-        // Get the next available queue number for the provided seat type
+        // Get the next available queue number by seat_type
         const queueCounts = await QueueModel.aggregate([
             { $match: { RestaurantID: restaurant._id, queue_number: { $regex: `^${String.fromCharCode(65 + seatTypeIndex)}` } } },
-            { $group: { _id: null, maxCount: { $max: { $toInt: { $ifNull: [{ $substr: ["$queue_number", 1, null] }, 0] } } } } },
-            { $project: { _id: 0, maxCount: { $ifNull: ["$maxCount", 0] } } },
+            {
+                $group: {
+                    _id: null,
+                    maxCount: {
+                        $max: {
+                            $convert: {
+                                input: { $substr: [{ $ifNull: ["$queue_number", "A0"] }, 1, -1] },
+                                to: "int",
+                                onError: 0,
+                                onNull: 0
+                            }
+                        }
+                    }
+                }
+            }
         ]);
 
         const nextQueueNumber = queueCounts.length > 0 ? queueCounts[0].maxCount + 1 : 1;
         const queueNumber = `${String.fromCharCode(65 + seatTypeIndex)}${nextQueueNumber}`;
 
-        // Create a new queue document
         const newQueue = new QueueModel({
             RestaurantID: restaurant._id,
             UserID: user._id,
