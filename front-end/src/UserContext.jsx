@@ -11,8 +11,8 @@ export const UserProvider = ({ children }) => {
         const fetchUser = async () => {
             try {
                 const response = await axioslib.get('/api/user/getuserbyid');
-                console.log('Fetched user:', response.data.user);
-                setUser(response.data.user);
+                console.log('Fetched user:', response.data);
+                setUser(response.data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setUser(null);

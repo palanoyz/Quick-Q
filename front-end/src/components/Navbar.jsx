@@ -18,11 +18,14 @@ const Navbar = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleLogout = async () => {
+  const handleLogout = async (e) => {
     try {
-      await axioslib.post('/api/user/logout');
-      setUser(null);
-      navigate('/login');
+      e.preventDefault();
+      await axioslib.post('/api/user/logout')
+        .then(() => {
+          setUser(null);
+          navigate('/');
+        });
     } catch (error) {
       console.error('Logout failed', error);
     }
@@ -56,7 +59,7 @@ const Navbar = () => {
       <div className="flex space-x-4 lg:mr-24">
         {user ? (
           <div className="flex items-center space-x-4">
-            <span className="text-sm lg:text-base font-bold text-primary">Hello, {user.username}</span>
+            <span className="text-sm lg:text-base font-bold text-primary">{user.username}</span>
             <button
               onClick={handleLogout}
               className="bg-primary transition-all duration-300 transform hover:scale-105 text-white text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10"

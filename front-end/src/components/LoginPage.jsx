@@ -17,12 +17,14 @@ const LoginPage = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
         try {
-            const response = await axioslib.post('/api/user/login', { email, password });
-            console.log('Login response:', response.data);
-            setUser(response.data.user);
-            navigate('/');
+            e.preventDefault();
+            await axioslib.post('/api/user/login', { email, password })
+                .then((res) => {
+                    setUser(res.data);
+                    navigate('/');
+                    window.location.reload();
+                });
         } catch (error) {
             console.error('Login failed', error);
             setError('Invalid email or password');
