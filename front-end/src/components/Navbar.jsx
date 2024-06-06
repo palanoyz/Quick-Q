@@ -19,19 +19,16 @@ const Navbar = () => {
   };
 
   const handleLogout = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-      await axioslib.post('/api/user/logout')
-        .then(() => {
-          setUser(null);
-          navigate('/');
-        });
+      await axioslib.post('/api/user/logout');
+      localStorage.removeItem('authToken');
+      setUser(null);
+      navigate('/');
     } catch (error) {
       console.error('Logout failed', error);
     }
   };
-
-  console.log('Navbar user:', user);
 
   return (
     <nav className="p-4 flex justify-between items-center shadow-xl">
