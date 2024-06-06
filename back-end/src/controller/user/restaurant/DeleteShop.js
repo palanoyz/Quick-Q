@@ -1,4 +1,4 @@
-const { RestaurantModel } = require("../../../model/Schema");
+const { RestaurantModel, UserModel } = require("../../../model/Schema");
 const mongoose = require("mongoose");
 
 const DeleteShop = async (req, res) => {
@@ -9,6 +9,9 @@ const DeleteShop = async (req, res) => {
         if (!deleteShop) {
             return res.status(404).json({ message: "Restaurant not found" });
         }
+
+        await UserModel.updateOne({ _id: deleteShop.OwnerID }, { $pull: { RestaurantID: deleteShop._id } }, { new: true });
+        
         return res.status(200).json({ message: "Restaurant deleted successfully" });
     } catch (error) {
         console.log(error);

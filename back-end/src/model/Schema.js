@@ -76,6 +76,10 @@ const Queue = new Schema({
         ref: "User"
     },
     queue_number: String,
+    status: {
+        type: Boolean,
+        default: true
+    }
 });
 const QueueModel = model("Queue", Queue);
 
