@@ -17,19 +17,20 @@ const LoginPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
-            await axioslib.post('/api/user/login', { email, password })
-                .then((res) => {
-                    setUser(res.data);
-                    navigate('/');
-                    window.location.reload();
-                });
+            const res = await axioslib.post('/api/user/login', { email, password });
+            const token = res.data.token;
+            localStorage.setItem('authToken', token);
+            setUser(res.data.user);
+            navigate('/');
+            window.location.reload();
         } catch (error) {
             console.error('Login failed', error);
             setError('Invalid email or password');
         }
     };
+
 
     return (
         <div className="flex justify-center items-center h-screen">
