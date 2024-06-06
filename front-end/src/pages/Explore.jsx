@@ -1,5 +1,4 @@
 import ExplorePage from '../components/ExplorePage';
-import Navbar from '../components/Navbar';
 
 
 const Explore = () => {
@@ -7,7 +6,6 @@ const Explore = () => {
 
     return (
         <>
-            <Navbar />
             <ExplorePage />
 
         </>

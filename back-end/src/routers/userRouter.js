@@ -24,7 +24,7 @@ router.get("/", (req, res) => {
 // auth
 router.post("/signup", signupController);
 router.post("/login", loginController);
-router.get("/logout", logoutController);
+router.post("/logout", logoutController);
 
 // user
 router.get("/getuser", validateToken, GetUser); // get all users, must login
