@@ -1,7 +1,7 @@
 const { supabase } = require("../lib/supabase");
 
 const uploadImageLogo = async (file) => {
-    const fileName = `/logo/${Date.now()}.jpg`;
+    const fileName = `/logo/${Date.now() + file.originalname}.jpg`;
 
     const { error } = await supabase.storage
         .from("WebproImg")
@@ -22,7 +22,7 @@ const uploadImageLogo = async (file) => {
 };
 
 const uploadImageBanner = async (file) => {
-    const fileName = `/banner/${Date.now()}.jpg`;
+    const fileName = `/banner/${Date.now() + file.originalname}.jpg`;
 
     const { error } = await supabase.storage
         .from("WebproImg")

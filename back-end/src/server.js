@@ -31,7 +31,7 @@ app.use(multerMid);
 // router zone
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
-require("./utils/ClearQueue");
+require("./utils/ClearQueue"); // clear queue after midnight
 
 
 

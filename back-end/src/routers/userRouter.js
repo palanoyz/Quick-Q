@@ -9,6 +9,7 @@ const { CreateShop } = require("../controller/user/restaurant/CreateShop");
 const { GetShop } = require("../controller/user/restaurant/GetShop");
 const { GetShopByID } = require("../controller/user/restaurant/GetShopByID");
 const { DeleteShop } = require("../controller/user/restaurant/DeleteShop");
+const { EditShop } = require("../controller/user/restaurant/EditShop");
 const { UpdateUser } = require("../controller/user/UpdateUser");
 const { GenerateQueue } = require("../controller/user/queue/GenerateQueue");
 const { UpdateQ } = require("../controller/user/queue/UpdateQ");
@@ -35,6 +36,7 @@ router.post("/createshop", CreateShop);
 router.get("/getshop", GetShop); // get all restaurant
 router.delete("/deleteshop/:shopID", DeleteShop);
 router.get("/getshopbyid/:shopID", GetShopByID); // get restaurant by id
+router.put("/editshop/:shopID", EditShop);
 
 // Queue
 router.post("/generatequeue/:shopID", GenerateQueue);
