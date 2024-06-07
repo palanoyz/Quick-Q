@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { axioslib } from '../lib/axioslib';
 import Card from '../components/Card';
+import { inputprovinces } from '../data/inputprovinces';
 
 const ExplorePage = () => {
     const pageSize = 12;
@@ -181,7 +182,7 @@ const ExplorePage = () => {
 
             {isPopupOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white p-8 rounded-lg w-1/2">
+                    <div className="bg-white rounded-lg w-full md:w-2/3 lg:w-1/2 xl:w-1/3 p-4 md:p-8">
                         <h2 className="text-2xl mb-4">New Restaurant</h2>
                         <form onSubmit={handleFormSubmit}>
                             <div className="mb-4">
@@ -205,7 +206,7 @@ const ExplorePage = () => {
                                     required
                                 >
                                     <option value="">Select Province</option>
-                                    {provinces.map(province => (
+                                    {inputprovinces.map(province => (
                                         <option key={province} value={province}>{province}</option>
                                     ))}
                                 </select>
@@ -273,6 +274,7 @@ const ExplorePage = () => {
                     </div>
                 </div>
             )}
+
         </>
     );
 };
