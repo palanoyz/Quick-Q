@@ -50,6 +50,7 @@ const GenerateQueue = async (req, res) => {
             RestaurantID: restaurant._id,
             UserID: user._id,
             queue_number: queueNumber,
+            seat_type
         });
         await newQueue.save();
 
