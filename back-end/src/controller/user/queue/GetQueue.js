@@ -4,6 +4,8 @@ const GetQueue = async (req, res) => {
     try {
         const { shopID } = req.params;
         const result = await QueueModel.find({ RestaurantID: shopID })
+            .populate("UserID")
+            .populate("RestaurantID");
         if (!result) {
             return res.status(400).json({ message: "Queue not found" });
         }
