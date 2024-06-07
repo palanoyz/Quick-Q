@@ -11,6 +11,17 @@ const ExplorePage = () => {
     const [data, setData] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const [types, setTypes] = useState([]);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [newRestaurant, setNewRestaurant] = useState({
+        name: '',
+        province: '',
+        seatType: [],
+        logo: null,
+        banner: null
+    });
+    const [seatTypeInput, setSeatTypeInput] = useState('');
+    const [logoPreview, setLogoPreview] = useState(null);
+    const [bannerPreview, setBannerPreview] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -60,7 +71,61 @@ const ExplorePage = () => {
     };
 
     const handleNewRestaurant = () => {
-        // Implement logic to handle creation of a new restaurant
+        setIsPopupOpen(true);
+    };
+
+    const handleFormChange = (event) => {
+        const { name, value } = event.target;
+        setNewRestaurant({
+            ...newRestaurant,
+            [name]: value
+        });
+    };
+
+    const handleImageChange = (event) => {
+        const { name, files } = event.target;
+        const file = files[0];
+
+        setNewRestaurant({
+            ...newRestaurant,
+            [name]: file
+        });
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            if (name === 'logo') {
+                setLogoPreview(reader.result);
+            } else if (name === 'banner') {
+                setBannerPreview(reader.result);
+            }
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSeatTypeChange = (event) => {
+        setSeatTypeInput(event.target.value);
+    };
+
+    const addSeatType = () => {
+        if (seatTypeInput.trim() !== '') {
+            setNewRestaurant((prevState) => ({
+                ...prevState,
+                seatType: [...prevState.seatType, seatTypeInput.trim()]
+            }));
+            setSeatTypeInput('');
+        }
+    };
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        console.log('New Restaurant:', newRestaurant);
+        setIsPopupOpen(false);
+    };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
     };
 
     return (
@@ -113,6 +178,101 @@ const ExplorePage = () => {
                     ))}
                 </div>
             </div>
+
+            {isPopupOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white p-8 rounded-lg w-1/2">
+                        <h2 className="text-2xl mb-4">New Restaurant</h2>
+                        <form onSubmit={handleFormSubmit}>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Restaurant Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={newRestaurant.name}
+                                    onChange={handleFormChange}
+                                    className="w-full border rounded-md py-2 px-3"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Province</label>
+                                <select
+                                    name="province"
+                                    value={newRestaurant.province}
+                                    onChange={handleFormChange}
+                                    className="w-full border rounded-md py-2 px-3"
+                                    required
+                                >
+                                    <option value="">Select Province</option>
+                                    {provinces.map(province => (
+                                        <option key={province} value={province}>{province}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Seat Type</label>
+                                <div className="flex">
+                                    <input
+                                        type="text"
+                                        value={seatTypeInput}
+                                        onChange={handleSeatTypeChange}
+                                        className="w-full border rounded-md py-2 px-3"
+                                    />
+                                    <button type="button" onClick={addSeatType} className="ml-2 px-3 py-2 bg-blue-500 text-white rounded-md">
+                                        Add
+                                    </button>
+                                </div>
+                                <div className="mt-2">
+                                    {newRestaurant.seatType.map((type, index) => (
+                                        <span key={index} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            {type}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Logo</label>
+                                <input
+                                    type="file"
+                                    name="logo"
+                                    onChange={handleImageChange}
+                                    className="w-full border rounded-md py-2 px-3"
+                                    accept="image/*"
+                                />
+                                {logoPreview && (
+                                    <div className="mt-2">
+                                        <img src={logoPreview} alt="Logo Preview" className="h-20 w-20 rounded-full object-cover" />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Banner</label>
+                                <input
+                                    type="file"
+                                    name="banner"
+                                    onChange={handleImageChange}
+                                    className="w-full border rounded-md py-2 px-3"
+                                    accept="image/*"
+                                />
+                                {bannerPreview && (
+                                    <div className="mt-2">
+                                        <img src={bannerPreview} alt="Banner Preview" className="w-96 h-52 object-cover" />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="flex justify-end">
+                                <button type="button" onClick={closePopup} className="mr-4 px-4 py-2 bg-gray-300 rounded-md">
+                                    Cancel
+                                </button>
+                                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </>
     );
 };
