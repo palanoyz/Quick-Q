@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Explore from "./pages/Explore";
-import Restaurant from "./pages/Restaurant"; // Changed from Queue to Restaurant
+import Restaurant from "./pages/Restaurant";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Navbar from "./components/Navbar";
