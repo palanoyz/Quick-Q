@@ -14,6 +14,7 @@ const { UpdateUser } = require("../controller/user/UpdateUser");
 const { GenerateQueue } = require("../controller/user/queue/GenerateQueue");
 const { UpdateQ } = require("../controller/user/queue/UpdateQ");
 const { GetUserQ } = require("../controller/user/queue/GetUserQ");
+const { GetQueue } = require("../controller/user/queue/GetQueue");
 
 const router = express.Router();
 
@@ -42,5 +43,6 @@ router.put("/editshop/:shopID", EditShop);
 router.post("/generatequeue/:shopID", GenerateQueue);
 router.put("/updateq/:queueID", UpdateQ);
 router.get("/getuserq/:userID/:shopID", GetUserQ);
+router.get("/getqueue/:shopID", GetQueue); // get all queue in a restaurant
 
 module.exports = router;
