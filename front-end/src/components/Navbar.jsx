@@ -30,6 +30,12 @@ const Navbar = () => {
     }
   };
 
+  // user dropdown
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const toggleUserMenu = () => {
+    setShowUserMenu(!showUserMenu);
+  };
+
   return (
     <nav className="p-4 flex justify-between items-center shadow-xl">
       <div className="flex items-center space-x-2">
@@ -52,8 +58,17 @@ const Navbar = () => {
       </div>
       <div className="flex space-x-4 lg:mr-24">
         {isLogin ? (
-          <div className="flex items-center space-x-4">
-            <span className="text-sm lg:text-base font-bold text-primary">{user.username}</span>
+          <div className="flex items-center space-x-4 select-none">
+            <div>
+              <span className="text-sm lg:text-base font-bold text-primary cursor-pointer" onClick={toggleUserMenu}>{user.username}</span>
+              {showUserMenu && (
+                <div className='absolute cursor-pointer'>
+                  <div><Link to="/user-restaurant">Your Restaurant</Link></div>
+                  <div><Link to="/user-queue">Your Q</Link></div>
+                </div>
+              )}
+            </div>
+
             <button
               onClick={handleLogout}
               className="bg-primary transition-all duration-300 transform hover:scale-105 text-white text-sm lg:text-base font-bold whitespace-nowrap rounded-3xl px-4 lg:px-6 h-10"
