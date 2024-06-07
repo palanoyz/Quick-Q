@@ -76,6 +76,7 @@ const Queue = new Schema({
         ref: "User"
     },
     queue_number: String,
+    seat_type: String,
     status: {
         type: Boolean,
         default: true
