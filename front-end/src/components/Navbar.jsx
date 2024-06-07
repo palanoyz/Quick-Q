@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../UserContext';
+import { UserContext } from '../context/UserContext';
 import { axioslib } from '../lib/axioslib';
 
 const Navbar = () => {
@@ -29,6 +29,10 @@ const Navbar = () => {
       console.error('Logout failed', error);
     }
   };
+
+  if (user && (window.location.pathname === '/login' || window.location.pathname === '/signup')) {
+    navigate('/');
+  }
 
   return (
     <nav className="p-4 flex justify-between items-center shadow-xl">
