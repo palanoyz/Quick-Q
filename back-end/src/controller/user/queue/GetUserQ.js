@@ -3,7 +3,9 @@ const { QueueModel } = require("../../../model/Schema");
 const GetUserQ = async (req, res) => {
     try {
         const { userID, shopID } = req.params;
-        const result = await QueueModel.find({ UserID: userID, RestaurantID: shopID });
+        const result = await QueueModel.find({ UserID: userID, RestaurantID: shopID })
+            .populate("UserID")
+            .populate("RestaurantID");
         if (!result) {
             return res.status(400).json({ message: "Queue not found" });
         }
