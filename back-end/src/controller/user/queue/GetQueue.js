@@ -1,9 +1,9 @@
 const { QueueModel } = require("../../../model/Schema");
 
-const GetUserQ = async (req, res) => {
+const GetQueue = async (req, res) => {
     try {
-        const { userID, shopID } = req.params;
-        const result = await QueueModel.find({ UserID: userID, RestaurantID: shopID })
+        const { shopID } = req.params;
+        const result = await QueueModel.find({ RestaurantID: shopID })
             .populate("UserID")
             .populate("RestaurantID");
         if (!result) {
@@ -16,4 +16,4 @@ const GetUserQ = async (req, res) => {
     }
 }
 
-module.exports = { GetUserQ }
+module.exports = { GetQueue }

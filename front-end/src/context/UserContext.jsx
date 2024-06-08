@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { axioslib } from './lib/axioslib';
+import { axioslib } from '../lib/axioslib';
 
 export const UserContext = createContext();
 

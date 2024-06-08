@@ -6,7 +6,7 @@ import Restaurant from "./pages/Restaurant"; // Changed from Queue to Restaurant
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Navbar from "./components/Navbar";
-import { UserProvider } from "./UserContext";
+import { UserProvider } from "./context/UserContext";
 
 function App() {
   return (

@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { axioslib } from '../lib/axioslib';
-import { UserContext } from '../UserContext';
+import { UserContext } from '../context/UserContext';
 
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -20,8 +20,6 @@ const LoginPage = () => {
         e.preventDefault();
         try {
             const res = await axioslib.post('/api/user/login', { email, password });
-            const token = res.data.token;
-            localStorage.setItem('authToken', token);
             setUser(res.data.user);
             navigate('/');
             window.location.reload();
