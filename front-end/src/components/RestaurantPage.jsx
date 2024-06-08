@@ -11,6 +11,8 @@ const RestaurantPage = () => {
     const [userQueue, setUserQueue] = useState(null);
     const [queues, setQueues] = useState([]);
     const [isOwner, setIsOwner] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
+
 
     useEffect(() => {
         const fetchRestaurantDetails = async () => {
@@ -27,7 +29,8 @@ const RestaurantPage = () => {
             try {
                 if (user && user._id) {
                     const response = await axioslib.get(`/api/user/getuserq/${user._id}/${restaurantID}`);
-                    setUserQueue(response.data.length > 0 ? response.data[0] : null);
+                    const userQueueData = response.data.length > 0 ? response.data[0] : null;
+                    setUserQueue(userQueueData);
                 }
             } catch (error) {
                 console.error('Error fetching user queue:', error);
@@ -43,22 +46,45 @@ const RestaurantPage = () => {
             }
         };
 
+        const checkQueueStatus = () => {
+            //ฝากหน่อย
+
+        };
+
+        fetchRestaurantDetails();
+        fetchQueues();
+
         if (user) {
-            fetchRestaurantDetails();
             fetchUserQueue();
-            fetchQueues();
         }
-    }, [restaurantID, user]);
+
+        const interval = setInterval(async () => {
+            await fetchQueues();
+            if (user) {
+                await fetchUserQueue();
+            }
+            checkQueueStatus();
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [restaurantID, user, userQueue, queues]);
 
     const getRemainingQueues = (seatType) => {
-        return queues.filter(queue => queue.seat_type === seatType && !queue.status).length;
+        if (!userQueue) return 0;
+
+        return queues.filter(queue =>
+            queue.seat_type === seatType &&
+            !queue.status &&
+            queue.queue_number < userQueue.queue_number
+        ).length;
     };
 
     const handleNextQueue = async (queueID) => {
         try {
             const response = await axioslib.put(`/api/user/updateq/${queueID}`);
             console.log('Update response:', response);
-            setQueues(queues.map(queue => queue._id === queueID ? { ...queue, status: true } : queue));
+
+            const updatedQueues = queues.map(queue => queue._id === queueID ? { ...queue, status: true } : queue);
+            setQueues(updatedQueues);
         } catch (error) {
             console.error('Error updating queue status:', error);
         }
@@ -73,15 +99,22 @@ const RestaurantPage = () => {
             <h1 className="text-3xl md:text-5xl font-bold">{restaurant.rest_name}</h1>
             {!isOwner && (
                 <>
-                    {userQueue ? (
-                        <div className="mt-12 mb-16">
-                            <h1 className="text-2xl md:text-3xl font-bold mb-2">Your Q (Type: {userQueue.seat_type})</h1>
-                            <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">{userQueue.queue_number}</h1>
-                            <p className="text-xl md:text-2xl font-bold">Remaining: {getRemainingQueues(userQueue.seat_type)} Q</p>
-                        </div>
+                    {user ? (
+                        userQueue ? (
+                            <div className="mt-12 mb-16">
+                                <h1 className="text-2xl md:text-3xl font-bold mb-2">Your Q (Type: {userQueue.seat_type})</h1>
+                                <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">{userQueue.queue_number}</h1>
+                                <p className="text-xl md:text-2xl font-bold">Remaining: {getRemainingQueues(userQueue.seat_type)} Q</p>
+                            </div>
+                        ) : (
+                            <div className="mt-12 mb-16">
+                                <h1 className="text-2xl md:text-3xl font-bold mb-2">You don&apos;t have a queue</h1>
+                                <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">-</h1>
+                            </div>
+                        )
                     ) : (
                         <div className="mt-12 mb-16">
-                            <h1 className="text-2xl md:text-3xl font-bold mb-2">You don&apos;t have a queue</h1>
+                            <h1 className="text-2xl md:text-3xl font-bold mb-2">You are not logged in</h1>
                             <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">-</h1>
                         </div>
                     )}
@@ -92,9 +125,9 @@ const RestaurantPage = () => {
                     <div className="mt-12" key={index}>
                         <h1 className="text-2xl md:text-3xl font-bold mb-2">Type: {seatType}</h1>
                         <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">
-                            {queues.find(queue => queue.seat_type === seatType && !queue.status)?.queue_number || 'N/A'}
+                            {queues.find(queue => queue.seat_type === seatType && !queue.status)?.queue_number || '-'}
                         </h1>
-                        <p className="text-xl md:text-2xl font-bold">Remaining: {getRemainingQueues(seatType)} Q</p>
+                        <p className="text-xl md:text-2xl font-bold">Remaining: {queues.filter(queue => queue.seat_type === seatType && !queue.status).length} Q</p>
                         {isOwner && (
                             <button
                                 className="mt-4 px-4 py-2 bg-primary text-white rounded"
@@ -106,6 +139,19 @@ const RestaurantPage = () => {
                     </div>
                 ))}
             </div>
+            {showPopup && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-8 rounded shadow">
+                        <h2 className="text-2xl font-bold mb-4">It&apos;s your turn!</h2>
+                        <button
+                            className="mt-4 px-4 py-2 bg-primary text-white rounded"
+                            onClick={() => setShowPopup(false)}
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
