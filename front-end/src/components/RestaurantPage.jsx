@@ -47,8 +47,17 @@ const RestaurantPage = () => {
         };
 
         const checkQueueStatus = () => {
-            //ฝากหน่อย
-
+            // ยังไม่เสร็จ
+            if (userQueue) {
+                const remainingQueues = queues.filter(queue =>
+                    queue.seat_type === userQueue.seat_type &&
+                    queue.status === true &&
+                    queue.queue_number < userQueue.queue_number
+                ).length;
+                if (remainingQueues === 0) {
+                    setShowPopup(true);
+                }
+            }
         };
 
         fetchRestaurantDetails();
@@ -64,16 +73,17 @@ const RestaurantPage = () => {
                 await fetchUserQueue();
             }
             checkQueueStatus();
-        }, 5000);
+        }, 10000);
         return () => clearInterval(interval);
     }, [restaurantID, user, userQueue, queues]);
+    //}, []); // for test 
 
     const getRemainingQueues = (seatType) => {
         if (!userQueue) return 0;
 
         return queues.filter(queue =>
             queue.seat_type === seatType &&
-            !queue.status &&
+            queue.status === true &&
             queue.queue_number < userQueue.queue_number
         ).length;
     };
@@ -125,7 +135,7 @@ const RestaurantPage = () => {
                     <div className="mt-12" key={index}>
                         <h1 className="text-2xl md:text-3xl font-bold mb-2">Type: {seatType}</h1>
                         <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">
-                            {queues.find(queue => queue.seat_type === seatType && !queue.status)?.queue_number || '-'}
+                            {queues.find(queue => queue.seat_type === seatType && queue.status)?.queue_number || '-'}
                         </h1>
                         <p className="text-xl md:text-2xl font-bold">Remaining: {queues.filter(queue => queue.seat_type === seatType && !queue.status).length} Q</p>
                         {isOwner && (
