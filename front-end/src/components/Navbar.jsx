@@ -35,7 +35,7 @@ const Navbar = () => {
   const toggleUserMenu = () => {
     setShowUserMenu(!showUserMenu);
   };
-  
+
   if (user && (window.location.pathname === '/login' || window.location.pathname === '/signup')) {
     navigate('/');
   }
@@ -63,12 +63,16 @@ const Navbar = () => {
       <div className="flex space-x-4 lg:mr-24">
         {isLogin ? (
           <div className="flex items-center space-x-4 select-none">
-            <div>
+            <div className="z-50">
               <span className="text-sm lg:text-base font-bold text-primary cursor-pointer" onClick={toggleUserMenu}>{user.username}</span>
               {showUserMenu && (
-                <div className='absolute cursor-pointer'>
-                  <div><Link to="/user-restaurant">Your Restaurant</Link></div>
-                  <div><Link to="/">Your Q</Link></div>
+                <div className='absolute cursor-pointer bg-gray-200 rounded-md'>
+                  <div className='bg-gray-200 rounded-md p-2 hover:bg-gray-300'>
+                    <Link to="/user-restaurant">Your Restaurants</Link>
+                  </div>
+                  <div className='bg-gray-200 rounded-md p-2 hover:bg-gray-300'>
+                    <Link to="/">Your Q</Link>
+                  </div>
                 </div>
               )}
             </div>
