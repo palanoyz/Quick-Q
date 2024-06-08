@@ -18,7 +18,7 @@ const HomePage = () => {
 
                 const buffetData = shopData.filter(item => item.rest_type === 'Buffet');
                 const cafeData = shopData.filter(item => item.rest_type === 'Cafe');
-                const sukiData = shopData.filter(item => item.rest_type === 'Suki');
+                const sukiData = shopData.filter(item => item.rest_type === 'Sukiyaki/Shabu');
 
                 setPopularBuffet(buffetData);
                 setPopularCafe(cafeData);
@@ -78,7 +78,7 @@ const HomePage = () => {
                 )}
                 {popularSuki.length > 0 && (
                     <div className="mx-5 lg:mx-28 mt-12">
-                        <h1 className="text-2xl font-montserrat font-bold">Suki</h1>
+                        <h1 className="text-2xl font-montserrat font-bold">Sukiyaki/Shabu</h1>
                         <Slider {...settings} className="mt-10">
                             {popularSuki.map((item) => (
                                 <Card key={item.id} item={item} />

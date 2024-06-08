@@ -2,6 +2,7 @@ export const inputprovinces = [
     "Amnat Charoen",
     "Ang Thong",
     "Ayutthaya",
+    "Bangkok",
     "Bueng Kan",
     "Buriram",
     "Chachoengsao",
@@ -74,6 +75,5 @@ export const inputprovinces = [
     "Uthai Thani",
     "Uttaradit",
     "Yala",
-    "Yasothon",
-    "Bangkok (Krung Thep Maha Nakhon)"
+    "Yasothon"
 ];
