@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { axioslib } from '../lib/axioslib';
@@ -12,54 +12,60 @@ const RestaurantPage = () => {
     const [queues, setQueues] = useState([]);
     const [isOwner, setIsOwner] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
+    const [showAddPopup, setShowAddPopup] = useState(false);
+    const [newUsername, setNewUsername] = useState('');
+    const [notified, setNotified] = useState(false);
 
+    const fetchRestaurantDetails = useCallback(async () => {
+        try {
+            const response = await axioslib.get(`/api/user/getshopbyid/${restaurantID}`);
+            setRestaurant(response.data);
+            setIsOwner(response.data.OwnerID._id === user?._id);
+        } catch (error) {
+            console.error('Error fetching restaurant details:', error);
+        }
+    }, [restaurantID, user]);
+
+    const fetchUserQueue = useCallback(async () => {
+        try {
+            if (user && user._id) {
+                const response = await axioslib.get(`/api/user/getuserq/${user._id}/${restaurantID}`);
+                const userQueueData = response.data.length > 0 && response.data[0].status ? response.data[0] : null;
+                setUserQueue(userQueueData);
+            }
+        } catch (error) {
+            console.error('Error fetching user queue:', error);
+        }
+    }, [restaurantID, user]);
+
+    const fetchQueues = useCallback(async () => {
+        try {
+            const response = await axioslib.get(`/api/user/getqueue/${restaurantID}`);
+            setQueues(response.data);
+        } catch (error) {
+            console.error('Error fetching queues:', error);
+        }
+    }, [restaurantID]);
+
+    const checkQueueStatus = useCallback(() => {
+        if (userQueue) {
+            const remainingQueues = queues.filter(queue =>
+                queue.seat_type === userQueue.seat_type &&
+                queue.status === true &&
+                queue.queue_number < userQueue.queue_number
+            ).length;
+
+            console.log('User Queue:', userQueue);
+            console.log('Remaining Queues:', remainingQueues);
+
+            if (remainingQueues === 0 && !notified) {
+                setShowPopup(true);
+                setNotified(true);
+            }
+        }
+    }, [queues, userQueue, notified]);
 
     useEffect(() => {
-        const fetchRestaurantDetails = async () => {
-            try {
-                const response = await axioslib.get(`/api/user/getshopbyid/${restaurantID}`);
-                setRestaurant(response.data);
-                setIsOwner(response.data.OwnerID._id === user?._id);
-            } catch (error) {
-                console.error('Error fetching restaurant details:', error);
-            }
-        };
-
-        const fetchUserQueue = async () => {
-            try {
-                if (user && user._id) {
-                    const response = await axioslib.get(`/api/user/getuserq/${user._id}/${restaurantID}`);
-                    const userQueueData = response.data.length > 0 ? response.data[0] : null;
-                    setUserQueue(userQueueData);
-                }
-            } catch (error) {
-                console.error('Error fetching user queue:', error);
-            }
-        };
-
-        const fetchQueues = async () => {
-            try {
-                const response = await axioslib.get(`/api/user/getqueue/${restaurantID}`);
-                setQueues(response.data);
-            } catch (error) {
-                console.error('Error fetching queues:', error);
-            }
-        };
-
-        const checkQueueStatus = () => {
-            // ยังไม่เสร็จ
-            if (userQueue) {
-                const remainingQueues = queues.filter(queue =>
-                    queue.seat_type === userQueue.seat_type &&
-                    queue.status === true &&
-                    queue.queue_number < userQueue.queue_number
-                ).length;
-                if (remainingQueues === 0) {
-                    setShowPopup(true);
-                }
-            }
-        };
-
         fetchRestaurantDetails();
         fetchQueues();
 
@@ -74,9 +80,13 @@ const RestaurantPage = () => {
             }
             checkQueueStatus();
         }, 10000);
+
         return () => clearInterval(interval);
-    }, [restaurantID, user, userQueue, queues]);
-    //}, []); // for test 
+    }, [fetchRestaurantDetails, fetchQueues, fetchUserQueue, checkQueueStatus, user]);
+
+    useEffect(() => {
+        checkQueueStatus();
+    }, [userQueue, queues, checkQueueStatus]);
 
     const getRemainingQueues = (seatType) => {
         if (!userQueue) return 0;
@@ -90,13 +100,43 @@ const RestaurantPage = () => {
 
     const handleNextQueue = async (queueID) => {
         try {
-            const response = await axioslib.put(`/api/user/updateq/${queueID}`);
+            const response = await axioslib.put(`/api/user/updateq/${queueID}`, { status: false });
             console.log('Update response:', response);
 
-            const updatedQueues = queues.map(queue => queue._id === queueID ? { ...queue, status: true } : queue);
+            const updatedQueues = queues.map(queue => queue._id === queueID ? { ...queue, status: false } : queue);
             setQueues(updatedQueues);
         } catch (error) {
             console.error('Error updating queue status:', error);
+        }
+    };
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+
+        const interval = setInterval(async () => {
+            await fetchQueues();
+            if (user) {
+                await fetchUserQueue();
+            }
+            checkQueueStatus();
+        }, 10000);
+
+        return () => clearInterval(interval);
+    };
+
+    const handleAddQueue = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axioslib.post(`/api/user/generatequeue/${restaurantID}`, {
+                username: newUsername,
+            });
+            console.log('Generate queue response:', response);
+
+            setQueues([...queues, response.data]);
+            setShowAddPopup(false);
+            setNewUsername('');
+        } catch (error) {
+            console.error('Error generating new queue:', error);
         }
     };
 
@@ -111,11 +151,18 @@ const RestaurantPage = () => {
                 <>
                     {user ? (
                         userQueue ? (
-                            <div className="mt-12 mb-16">
-                                <h1 className="text-2xl md:text-3xl font-bold mb-2">Your Q (Type: {userQueue.seat_type})</h1>
-                                <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">{userQueue.queue_number}</h1>
-                                <p className="text-xl md:text-2xl font-bold">Remaining: {getRemainingQueues(userQueue.seat_type)} Q</p>
-                            </div>
+                            userQueue.status === true ? (
+                                <div className="mt-12 mb-16">
+                                    <h1 className="text-2xl md:text-3xl font-bold mb-2">Your Q (Type: {userQueue.seat_type})</h1>
+                                    <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">{userQueue.queue_number}</h1>
+                                    <p className="text-xl md:text-2xl font-bold">Remaining: {getRemainingQueues(userQueue.seat_type)} Q</p>
+                                </div>
+                            ) : (
+                                <div className="mt-12 mb-16">
+                                    <h1 className="text-2xl md:text-3xl font-bold mb-2">You don&apos;t have a current queue</h1>
+                                    <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">-</h1>
+                                </div>
+                            )
                         ) : (
                             <div className="mt-12 mb-16">
                                 <h1 className="text-2xl md:text-3xl font-bold mb-2">You don&apos;t have a queue</h1>
@@ -137,14 +184,22 @@ const RestaurantPage = () => {
                         <h1 className="text-6xl md:text-8xl text-primary font-bold mb-12">
                             {queues.find(queue => queue.seat_type === seatType && queue.status)?.queue_number || '-'}
                         </h1>
-                        <p className="text-xl md:text-2xl font-bold">Remaining: {queues.filter(queue => queue.seat_type === seatType && !queue.status).length} Q</p>
+                        <p className="text-xl md:text-2xl font-bold">Remaining: {queues.filter(queue => queue.seat_type === seatType && queue.status).length} Q</p>
                         {isOwner && (
-                            <button
-                                className="mt-4 px-4 py-2 bg-primary text-white rounded"
-                                onClick={() => handleNextQueue(queues.find(queue => queue.seat_type === seatType && !queue.status)?._id)}
-                            >
-                                Next Queue
-                            </button>
+                            <>
+                                <button
+                                    className="mt-4 px-4 py-2 bg-primary text-white rounded"
+                                    onClick={() => handleNextQueue(queues.find(queue => queue.seat_type === seatType && queue.status)?._id)}
+                                >
+                                    Next Queue
+                                </button>
+                                <button
+                                    className="mt-4 px-4 py-2 bg-secondary text-primary border-primary border-2 rounded ml-4"
+                                    onClick={() => setShowAddPopup(true)}
+                                >
+                                    Add Queue
+                                </button>
+                            </>
                         )}
                     </div>
                 ))}
@@ -155,10 +210,47 @@ const RestaurantPage = () => {
                         <h2 className="text-2xl font-bold mb-4">It&apos;s your turn!</h2>
                         <button
                             className="mt-4 px-4 py-2 bg-primary text-white rounded"
-                            onClick={() => setShowPopup(false)}
+                            onClick={handleClosePopup}
                         >
                             OK
                         </button>
+                    </div>
+                </div>
+            )}
+            {showAddPopup && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-8 rounded shadow">
+                        <h2 className="text-2xl font-bold mb-4">Add New Queue</h2>
+                        <form onSubmit={handleAddQueue}>
+                            <div className="mb-4">
+                                <label className="block text-left text-xl font-bold mb-2" htmlFor="username">
+                                    Username
+                                </label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    value={newUsername}
+                                    onChange={(e) => setNewUsername(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                    required
+                                />
+                            </div>
+                            <div className="flex justify-end">
+                                <button
+                                    type="button"
+                                    className="mr-4 px-4 py-2 bg-gray-500 text-white rounded"
+                                    onClick={() => setShowAddPopup(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-primary text-white rounded"
+                                >
+                                    Add
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}
