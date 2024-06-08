@@ -64,7 +64,7 @@ const Navbar = () => {
               {showUserMenu && (
                 <div className='absolute cursor-pointer'>
                   <div><Link to="/user-restaurant">Your Restaurant</Link></div>
-                  <div><Link to="/user-queue">Your Q</Link></div>
+                  <div><Link to="/">Your Q</Link></div>
                 </div>
               )}
             </div>
