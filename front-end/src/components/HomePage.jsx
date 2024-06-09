@@ -99,8 +99,10 @@ const HomePage = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await axioslib.delete(`/api/user/deleteshop/${id}`);
-            console.log('Deleted Restaurant:', response.data);
+            await axioslib.delete(`/api/user/deleteshop/${id}`)
+                .then(() => {
+                    window.location.reload();
+                });
         } catch (error) {
             console.error('Error deleting restaurant:', error);
         }
@@ -196,7 +198,7 @@ const HomePage = () => {
                         <h1 className="text-2xl font-montserrat font-bold">Cafe</h1>
                         <Slider {...settings} className="mt-10">
                             {popularCafe.map((item) => (
-                                <Card key={item.id} item={item} onEdit={openEditPopup} />
+                                <Card key={item.id} item={item} onEdit={openEditPopup} onDelete={handleDelete} />
                             ))}
                         </Slider>
                     </div>
@@ -206,7 +208,7 @@ const HomePage = () => {
                         <h1 className="text-2xl font-montserrat font-bold">Sukiyaki/Shabu</h1>
                         <Slider {...settings} className="mt-10">
                             {popularSuki.map((item) => (
-                                <Card key={item.id} item={item} onEdit={openEditPopup} />
+                                <Card key={item.id} item={item} onEdit={openEditPopup} onDelete={handleDelete} />
                             ))}
                         </Slider>
                     </div>
