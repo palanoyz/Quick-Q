@@ -252,7 +252,7 @@ const ExplorePage = () => {
                         </select>
 
                         <button onClick={() => { setIsPopupOpen(true); resetForm(); }} className="border-primary border-2 text-primary hover:bg-primary hover:text-white font-bold py-2 px-4 rounded-full">
-                            New Queue
+                            New Restaurant
                         </button>
                     </div>
                 </div>
