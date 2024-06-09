@@ -19,7 +19,7 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axioslib.post('/api/user/login', { email, password });
+            const res = await axioslib.post('/api/user/login', { login: email, password });
             setUser(res.data.user);
             navigate('/');
             window.location.reload();
@@ -37,9 +37,9 @@ const LoginPage = () => {
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email | Username</label>
                         <input
-                            type="email"
+                            type="text"
                             id="email"
                             name="email"
                             className="mt-1 p-2 block w-full border border-gray-300 rounded-lg focus:outline-none focus:border-primary"

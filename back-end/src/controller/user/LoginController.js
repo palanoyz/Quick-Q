@@ -5,8 +5,10 @@ const { secret_jwt } = require("../../config/config");
 
 const loginController = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await UserModel.findOne({ email: email });
+        const { login, password } = req.body;
+        const user = await UserModel.findOne({ 
+            $or: [{ email: login }, { username: login }] 
+        });
         if (!user) {
             return res.status(400).json({ message: "User not found" });
         }
