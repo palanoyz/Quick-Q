@@ -147,14 +147,16 @@ const ExplorePage = () => {
         formData.append('rest_banner', newRestaurant.rest_banner);
 
         try {
-            const response = await axioslib.post('/api/user/createshop', formData, {
+            await axioslib.post('/api/user/createshop', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
+            }).then(() => {
+                setIsPopupOpen(false);
+                resetForm();
+            }).then(() => {
+                window.location.reload();
             });
-            console.log('New Restaurant:', response.data);
-            setIsPopupOpen(false);
-            resetForm();
         } catch (error) {
             console.error('Error creating new restaurant:', error);
         }
@@ -176,15 +178,17 @@ const ExplorePage = () => {
         if (newRestaurant.rest_banner) formData.append('rest_banner', newRestaurant.rest_banner);
 
         try {
-            const response = await axioslib.put(`/api/user/editshop/${currentEditItem._id}`, formData, {
+            await axioslib.put(`/api/user/editshop/${currentEditItem._id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
+            }).then(() => {
+                setIsPopupOpen(false);
+                setIsEditMode(false);
+                resetForm();
+            }).then(() => {
+                window.location.reload();
             });
-            console.log('Edited Restaurant:', response.data);
-            setIsPopupOpen(false);
-            setIsEditMode(false);
-            resetForm();
         } catch (error) {
             console.error('Error editing restaurant:', error);
         }
@@ -252,7 +256,7 @@ const ExplorePage = () => {
                         </select>
 
                         <button onClick={() => { setIsPopupOpen(true); resetForm(); }} className="border-primary border-2 text-primary hover:bg-primary hover:text-white font-bold py-2 px-4 rounded-full">
-                            New Queue
+                            New Restaurant
                         </button>
                     </div>
                 </div>
