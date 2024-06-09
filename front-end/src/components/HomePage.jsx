@@ -97,7 +97,14 @@ const HomePage = () => {
     };
 
 
-
+    const handleDelete = async (id) => {
+        try {
+            const response = await axioslib.delete(`/api/user/deleteshop/${id}`);
+            console.log('Deleted Restaurant:', response.data);
+        } catch (error) {
+            console.error('Error deleting restaurant:', error);
+        }
+    };
 
 
     const handleEditSubmit = async (e) => {
@@ -179,7 +186,7 @@ const HomePage = () => {
                         <h1 className="text-2xl font-montserrat font-bold">Buffet</h1>
                         <Slider {...settings} className="mt-10">
                             {popularBuffet.map((item) => (
-                                <Card key={item.id} item={item} onEdit={openEditPopup} />
+                                <Card key={item.id} item={item} onEdit={openEditPopup} onDelete={handleDelete} />
                             ))}
                         </Slider>
                     </div>
