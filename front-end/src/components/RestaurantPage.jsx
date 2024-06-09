@@ -256,6 +256,21 @@ const RestaurantPage = () => {
                     </div>
                 </div>
             )}
+
+            <div className='flex flex-row justify-center'>
+                <div className="text-2xl px-2">Q</div>
+                <div className="text-2xl px-2">username</div>
+                <div className="text-2xl px-2">status</div>
+            </div>
+            <div className=''>
+                {queues.map((queue) => (
+                    <div className='flex flex-row justify-center' key={queue._id}>
+                        <div className="px-2">{queue.queue_number}</div>
+                        <div className="px-2">{queue.UserID.username}</div>
+                        <div className="px-2">{String(queue.status)}</div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
