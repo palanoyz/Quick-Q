@@ -31,7 +31,7 @@ const RestaurantPage = () => {
         try {
             if (user && user._id) {
                 const response = await axioslib.get(`/api/user/getuserq/${user._id}/${restaurantID}`);
-                const userQueueData = response.data.length > 0 && response.data[0].status ? response.data[0] : null;
+                const userQueueData = response.data.find(queue => queue.status === true) || null;
                 setUserQueue(userQueueData);
             }
         } catch (error) {
@@ -59,7 +59,7 @@ const RestaurantPage = () => {
             console.log('User Queue:', userQueue);
             console.log('Remaining Queues:', remainingQueues);
 
-            if (remainingQueues === 0 && !notified) {
+            if (remainingQueues === 0 && !notified && userQueue.status === true) {
                 setShowPopup(true);
                 setNotified(true);
             }
@@ -197,7 +197,7 @@ const RestaurantPage = () => {
                                 </button>
                                 <button
                                     className="mt-4 px-4 py-2 bg-secondary text-primary border-primary border-2 rounded ml-4"
-                                    onClick={() => {setShowAddPopup(true); setSelectedSeat(seatType);}}
+                                    onClick={() => { setShowAddPopup(true); setSelectedSeat(seatType); }}
                                 >
                                     Add Queue
                                 </button>
@@ -259,6 +259,7 @@ const RestaurantPage = () => {
 
             <div className='flex flex-row justify-center'>
                 <div className="text-2xl px-2">Q</div>
+                <div className="text-2xl px-2">Seat type</div>
                 <div className="text-2xl px-2">username</div>
                 <div className="text-2xl px-2">status</div>
             </div>
@@ -266,7 +267,12 @@ const RestaurantPage = () => {
                 {queues.map((queue) => (
                     <div className='flex flex-row justify-center' key={queue._id}>
                         <div className="px-2">{queue.queue_number}</div>
-                        <div className="px-2">{queue.UserID.username}</div>
+                        <div className="px-2">{queue.seat_type}</div>
+                        <input
+                            className="px-2 border"
+                            placeholder='username'
+                            value={queue.UserID.username}
+                        />
                         <div className="px-2">{String(queue.status)}</div>
                     </div>
                 ))}
