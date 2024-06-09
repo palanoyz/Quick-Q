@@ -56,9 +56,6 @@ const RestaurantPage = () => {
                 queue.queue_number < userQueue.queue_number
             ).length;
 
-            console.log('User Queue:', userQueue);
-            console.log('Remaining Queues:', remainingQueues);
-
             if (remainingQueues === 0 && !notified && userQueue.status === true) {
                 setShowPopup(true);
                 setNotified(true);
@@ -139,6 +136,18 @@ const RestaurantPage = () => {
             setNewUsername('');
         } catch (error) {
             console.error('Error generating new queue:', error);
+        }
+    };
+
+    const handleEditQueue = async (queueID, updatedData) => {
+        try {
+            const response = await axioslib.put(`/api/user/updateq/${queueID}`, updatedData);
+            console.log('Update response:', response);
+
+            const updatedQueues = queues.map(queue => queue._id === queueID ? { ...queue, ...updatedData } : queue);
+            setQueues(updatedQueues);
+        } catch (error) {
+            console.error('Error updating queue:', error);
         }
     };
 
@@ -256,27 +265,40 @@ const RestaurantPage = () => {
                     </div>
                 </div>
             )}
+            {isOwner && (
+                <div className="mt-16 flex justify-center pb-12">
+                    <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead className="bg-gray-200">
+                            <tr>
+                                <th className="py-2 px-4  border-r border-white border-2 bg-primary text-white">Q</th>
+                                <th className="py-2 px-4  border-r border-white border-2 bg-primary text-white">Seat Type</th>
+                                <th className="py-2 px-4  border-r border-white border-2 bg-primary text-white">Username</th>
+                                <th className="py-2 px-4  bg-primary text-white">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {queues.map((queue) => (
+                                <tr key={queue._id} className="text-center">
+                                    <td className="py-2 px-4 border-b">{queue.queue_number}</td>
+                                    <td className="py-2 px-4 border-b">{queue.seat_type}</td>
+                                    <td className="py-2 px-4 border-b">{queue.UserID.username}</td>
+                                    <td className="py-2 px-4 border-b">
+                                        <select
+                                            className="px-2 py-1 border rounded"
+                                            value={queue.status}
+                                            onChange={(e) => handleEditQueue(queue._id, { status: e.target.value === 'true' })}
+                                        >
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                    </td>
 
-            <div className='flex flex-row justify-center'>
-                <div className="text-2xl px-2">Q</div>
-                <div className="text-2xl px-2">Seat type</div>
-                <div className="text-2xl px-2">username</div>
-                <div className="text-2xl px-2">status</div>
-            </div>
-            <div className=''>
-                {queues.map((queue) => (
-                    <div className='flex flex-row justify-center' key={queue._id}>
-                        <div className="px-2">{queue.queue_number}</div>
-                        <div className="px-2">{queue.seat_type}</div>
-                        <input
-                            className="px-2 border"
-                            placeholder='username'
-                            value={queue.UserID.username}
-                        />
-                        <div className="px-2">{String(queue.status)}</div>
-                    </div>
-                ))}
-            </div>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 };
