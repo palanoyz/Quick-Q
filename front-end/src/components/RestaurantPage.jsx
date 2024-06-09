@@ -266,7 +266,7 @@ const RestaurantPage = () => {
                 </div>
             )}
             {isOwner && (
-                <div className="mt-16 flex justify-center pb-12">
+                <div className="mt-16 flex justify-center mx-10 md:mx-40 xl:mx-56 ">
                     <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                         <thead className="bg-gray-200">
                             <tr>
