@@ -59,7 +59,7 @@ const Card = ({ item, onEdit, onDelete }) => {
                 </div>
             </div>
             {showDeleteConfirm && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="fixed inset-0 flex items-center justify-center  z-50">
                     <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-md">
                         <h2 className="text-2xl font-semibold mb-4">Confirm Delete</h2>
                         <p className="mb-4">Are you sure you want to delete this restaurant?</p>
