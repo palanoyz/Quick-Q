@@ -40,7 +40,7 @@ router.get("/getshop", GetShop); // get all restaurant
 router.delete("/deleteshop/:shopID", DeleteShop);
 router.get("/getshopbyid/:shopID", GetShopByID); // get restaurant by id
 router.put("/editshop/:shopID", EditShop);
-router.get("/searchshop", SearchShop);
+router.post("/searchshop", SearchShop);
 router.get("/getusershop", GetUserShop); // get user's restaurant, must login
 
 // Queue
