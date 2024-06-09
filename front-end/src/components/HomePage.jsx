@@ -35,7 +35,7 @@ const HomePage = () => {
                 const shopData = response.data;
 
                 const buffetData = shopData.filter(item => item.rest_type === 'Buffet');
-                const cafeData = shopData.filter(item => item.rest_type === 'Cafe');
+                const cafeData = shopData.filter(item => item.rest_type === 'Café/Bistro');
                 const sukiData = shopData.filter(item => item.rest_type === 'Sukiyaki/Shabu');
 
                 setPopularBuffet(buffetData);
@@ -136,7 +136,7 @@ const HomePage = () => {
             resetForm();
             const updatedData = await axioslib.get('/api/user/getshop');
             setPopularBuffet(updatedData.data.filter(item => item.rest_type === 'Buffet'));
-            setPopularCafe(updatedData.data.filter(item => item.rest_type === 'Cafe'));
+            setPopularCafe(updatedData.data.filter(item => item.rest_type === 'Café/Bistro'));
             setPopularSuki(updatedData.data.filter(item => item.rest_type === 'Sukiyaki/Shabu'));
         } catch (error) {
             console.error('Error editing restaurant:', error);
@@ -195,7 +195,7 @@ const HomePage = () => {
                 )}
                 {popularCafe.length > 0 && (
                     <div className="mx-5 lg:mx-28 mt-12">
-                        <h1 className="text-2xl font-montserrat font-bold">Cafe</h1>
+                        <h1 className="text-2xl font-montserrat font-bold">Café/Bistro</h1>
                         <Slider {...settings} className="mt-10">
                             {popularCafe.map((item) => (
                                 <Card key={item.id} item={item} onEdit={openEditPopup} onDelete={handleDelete} />
