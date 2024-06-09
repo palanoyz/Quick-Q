@@ -15,6 +15,7 @@ const RestaurantPage = () => {
     const [showAddPopup, setShowAddPopup] = useState(false);
     const [newUsername, setNewUsername] = useState('');
     const [notified, setNotified] = useState(false);
+    const [selectedSeat, setSelectedSeat] = useState('');
 
     const fetchRestaurantDetails = useCallback(async () => {
         try {
@@ -124,11 +125,12 @@ const RestaurantPage = () => {
         return () => clearInterval(interval);
     };
 
-    const handleAddQueue = async (event) => {
-        event.preventDefault();
+    const handleAddQueue = async (e) => {
+        e.preventDefault();
         try {
             const response = await axioslib.post(`/api/user/generatequeue/${restaurantID}`, {
                 username: newUsername,
+                seat_type: selectedSeat,
             });
             console.log('Generate queue response:', response);
 
@@ -195,7 +197,7 @@ const RestaurantPage = () => {
                                 </button>
                                 <button
                                     className="mt-4 px-4 py-2 bg-secondary text-primary border-primary border-2 rounded ml-4"
-                                    onClick={() => setShowAddPopup(true)}
+                                    onClick={() => {setShowAddPopup(true); setSelectedSeat(seatType);}}
                                 >
                                     Add Queue
                                 </button>
