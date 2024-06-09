@@ -16,18 +16,20 @@ const ExplorePage = () => {
     const [provinces, setProvinces] = useState([]);
     const [types, setTypes] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [currentEditItem, setCurrentEditItem] = useState(null);
     const [newRestaurant, setNewRestaurant] = useState({
-        name: '',
+        rest_name: '',
         province: '',
         seatType: [],
         rest_type: '',
-        logo: null,
-        banner: null,
+        rest_logo: null,
+        rest_banner: null,
     });
     const [seatTypeInput, setSeatTypeInput] = useState('');
     const [imagePreviews, setImagePreviews] = useState({
-        logo: null,
-        banner: null,
+        rest_logo: null,
+        rest_banner: null,
     });
 
     useEffect(() => {
@@ -113,21 +115,36 @@ const ExplorePage = () => {
         }
     };
 
+    const resetForm = () => {
+        setNewRestaurant({
+            rest_name: '',
+            province: '',
+            seatType: [],
+            rest_type: '',
+            rest_logo: null,
+            rest_banner: null,
+        });
+        setSeatTypeInput('');
+        setImagePreviews({
+            rest_logo: null,
+            rest_banner: null,
+        });
+    };
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('rest_name', newRestaurant.name);
+        formData.append('rest_name', newRestaurant.rest_name);
         formData.append('rest_type', newRestaurant.rest_type);
         formData.append('province', newRestaurant.province);
 
-        // Append each seat type individually
         newRestaurant.seatType.forEach(type => {
             formData.append('seat_type[]', type);
         });
 
-        formData.append('rest_logo', newRestaurant.logo);
-        formData.append('rest_banner', newRestaurant.banner);
+        formData.append('rest_logo', newRestaurant.rest_logo);
+        formData.append('rest_banner', newRestaurant.rest_banner);
 
         try {
             const response = await axioslib.post('/api/user/createshop', formData, {
@@ -137,15 +154,75 @@ const ExplorePage = () => {
             });
             console.log('New Restaurant:', response.data);
             setIsPopupOpen(false);
-            // Optionally, refresh data or provide success feedback
+            resetForm();
         } catch (error) {
             console.error('Error creating new restaurant:', error);
-            // Optionally, provide error feedback
+        }
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('rest_name', newRestaurant.rest_name);
+        formData.append('rest_type', newRestaurant.rest_type);
+        formData.append('province', newRestaurant.province);
+
+        newRestaurant.seatType.forEach(type => {
+            formData.append('seat_type[]', type);
+        });
+
+        if (newRestaurant.rest_logo) formData.append('rest_logo', newRestaurant.rest_logo);
+        if (newRestaurant.rest_banner) formData.append('rest_banner', newRestaurant.rest_banner);
+
+        try {
+            const response = await axioslib.put(`/api/user/editshop/${currentEditItem._id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log('Edited Restaurant:', response.data);
+            setIsPopupOpen(false);
+            setIsEditMode(false);
+            resetForm();
+        } catch (error) {
+            console.error('Error editing restaurant:', error);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await axioslib.delete(`/api/user/deleteshop/${id}`);
+            console.log('Deleted Restaurant:', response.data);
+            setData(data.filter(item => item._id !== id));
+        } catch (error) {
+            console.error('Error deleting restaurant:', error);
         }
     };
 
     const closePopup = () => {
         setIsPopupOpen(false);
+        setIsEditMode(false);
+        setCurrentEditItem(null);
+        resetForm();
+    };
+
+    const openEditPopup = (item) => {
+        setIsPopupOpen(true);
+        setIsEditMode(true);
+        setCurrentEditItem(item);
+        setNewRestaurant({
+            rest_name: item.rest_name,
+            province: item.province,
+            seatType: item.seatType || [],
+            rest_type: item.rest_type,
+            rest_logo: null,
+            rest_banner: null,
+        });
+        setImagePreviews({
+            rest_logo: item.rest_logo,
+            rest_banner: item.rest_banner,
+        });
     };
 
     return (
@@ -174,7 +251,7 @@ const ExplorePage = () => {
                             ))}
                         </select>
 
-                        <button onClick={() => setIsPopupOpen(true)} className="border-primary border-2 text-primary hover:bg-primary hover:text-white font-bold py-2 px-4 rounded-full">
+                        <button onClick={() => { setIsPopupOpen(true); resetForm(); }} className="border-primary border-2 text-primary hover:bg-primary hover:text-white font-bold py-2 px-4 rounded-full">
                             New Queue
                         </button>
                     </div>
@@ -182,16 +259,16 @@ const ExplorePage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 mt-5 gap-8">
                     {currentCards.map((item) => (
-                        <Card key={item.id} item={item} />
+                        <Card key={item._id} item={item} onEdit={openEditPopup} onDelete={handleDelete} />
                     ))}
                 </div>
 
-                <div className="flex justify-center mt-5">
-                    {[...Array(Math.ceil(filteredData.length / pageSize)).keys()].map((pageNumber) => (
+                <div className="flex justify-center mt-8 space-x-2">
+                    {Array.from({ length: Math.ceil(filteredData.length / pageSize) }).map((_, pageNumber) => (
                         <button
                             key={pageNumber}
                             onClick={() => setCurrentPage(pageNumber + 1)}
-                            className={`mx-1 px-3 py-1 border rounded-md ${currentPage === pageNumber + 1 ? 'bg-gray-200' : 'bg-white'}`}
+                            className={`px-3 py-1 border rounded ${currentPage === pageNumber + 1 ? 'bg-primary text-white' : 'bg-white text-primary border-primary'}`}
                         >
                             {pageNumber + 1}
                         </button>
@@ -201,108 +278,66 @@ const ExplorePage = () => {
 
             {isPopupOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white rounded-lg w-full md:w-2/3 lg:w-1/2 xl:w-1/3 p-4 md:p-8 h-3/4 overflow-y-auto">
-                        <h2 className="text-2xl mb-4">New Restaurant</h2>
-                        <form onSubmit={handleFormSubmit}>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Restaurant Name</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={newRestaurant.name}
-                                    onChange={handleFormChange}
-                                    className="w-full border rounded-md py-2 px-3"
-                                    required
-                                />
+                    <div className="bg-white p-8 rounded-lg shadow-lg relative w-full max-w-2xl">
+                        <h2 className="text-2xl font-semibold mb-4">{isEditMode ? 'Edit Restaurant' : 'Create New Restaurant'}</h2>
+                        <button onClick={closePopup} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+
+                        <form onSubmit={isEditMode ? handleEditSubmit : handleFormSubmit} className="space-y-4">
+                            <div>
+                                <label htmlFor="rest_name" className="block font-medium">Name</label>
+                                <input type="text" id="rest_name" name="rest_name" value={newRestaurant.rest_name} onChange={handleFormChange} className="w-full border rounded-md px-3 py-2" required />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Restaurant Type</label>
-                                <select
-                                    name="rest_type"
-                                    value={newRestaurant.rest_type}
-                                    onChange={handleFormChange}
-                                    className="w-full border rounded-md py-2 px-3"
-                                    required
-                                >
-                                    <option value="">Select Type</option>
-                                    {restTypes.map(type => (
-                                        <option key={type} value={type}>{type}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Province</label>
-                                <select
-                                    name="province"
-                                    value={newRestaurant.province}
-                                    onChange={handleFormChange}
-                                    className="w-full border rounded-md py-2 px-3"
-                                    required
-                                >
+
+                            <div>
+                                <label htmlFor="province" className="block font-medium">Province</label>
+                                <select id="province" name="province" value={newRestaurant.province} onChange={handleFormChange} className="w-full border rounded-md px-3 py-2" required>
                                     <option value="">Select Province</option>
                                     {inputprovinces.map(province => (
                                         <option key={province} value={province}>{province}</option>
                                     ))}
                                 </select>
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Seat Type</label>
-                                <div className="flex">
-                                    <input
-                                        type="text"
-                                        value={seatTypeInput}
-                                        onChange={handleSeatTypeChange}
-                                        className="w-full border rounded-md py-2 px-3"
-                                    />
-                                    <button type="button" onClick={addSeatType} className="ml-2 px-3 py-2 bg-primary text-white rounded-md">
-                                        Add
-                                    </button>
-                                </div>
-                                <div className="mt-2">
-                                    {newRestaurant.seatType.map((type, index) => (
-                                        <span key={index} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                            {type}
-                                        </span>
+
+                            <div>
+                                <label htmlFor="rest_type" className="block font-medium">Type</label>
+                                <select id="rest_type" name="rest_type" value={newRestaurant.rest_type} onChange={handleFormChange} className="w-full border rounded-md px-3 py-2" required>
+                                    <option value="">Select Type</option>
+                                    {restTypes.map(type => (
+                                        <option key={type} value={type}>{type}</option>
                                     ))}
+                                </select>
+                            </div>
+
+                            {!isEditMode && (
+                                <div>
+                                    <label className="block font-medium">Seat Types</label>
+                                    <div className="flex items-center space-x-2">
+                                        <input type="text" value={seatTypeInput} onChange={handleSeatTypeChange} className="flex-grow border rounded-md px-3 py-2" />
+                                        <button type="button" onClick={addSeatType} className="border border-primary text-primary hover:bg-primary hover:text-white rounded-md px-3 py-2">Add</button>
+                                    </div>
+                                    <div className="flex flex-wrap mt-2 space-x-2">
+                                        {newRestaurant.seatType.map((type, index) => (
+                                            <span key={index} className="bg-primary text-white rounded-full px-3 py-1 text-sm">{type}</span>
+                                        ))}
+                                    </div>
                                 </div>
+                            )}
+
+                            <div>
+                                <label htmlFor="rest_logo" className="block font-medium">Logo</label>
+                                <input type="file" id="rest_logo" name="rest_logo" accept="image/*" onChange={handleImageChange} className="w-full" />
+                                {imagePreviews.rest_logo && <img src={imagePreviews.rest_logo} alt="Logo Preview" className="mt-2 w-20 h-20 object-cover" />}
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Logo</label>
-                                <input
-                                    type="file"
-                                    name="logo"
-                                    onChange={handleImageChange}
-                                    className="w-full border rounded-md py-2 px-3"
-                                    accept="image/*"
-                                />
-                                {imagePreviews.logo && (
-                                    <div className="mt-2">
-                                        <img src={imagePreviews.logo} alt="Logo Preview" className="h-20 w-20 rounded-full object-cover" />
-                                    </div>
-                                )}
+
+                            <div>
+                                <label htmlFor="rest_banner" className="block font-medium">Banner</label>
+                                <input type="file" id="rest_banner" name="rest_banner" accept="image/*" onChange={handleImageChange} className="w-full" />
+                                {imagePreviews.rest_banner && <img src={imagePreviews.rest_banner} alt="Banner Preview" className="mt-2 w-full h-32 object-cover" />}
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Banner</label>
-                                <input
-                                    type="file"
-                                    name="banner"
-                                    onChange={handleImageChange}
-                                    className="w-full border rounded-md py-2 px-3"
-                                    accept="image/*"
-                                />
-                                {imagePreviews.banner && (
-                                    <div className="mt-2">
-                                        <img src={imagePreviews.banner} alt="Banner Preview" className="w-96 h-52 object-cover" />
-                                    </div>
-                                )}
-                            </div>
-                            <div className="flex justify-end">
-                                <button type="button" onClick={closePopup} className="mr-4 px-4 py-2 bg-gray-300 rounded-md">
-                                    Cancel
-                                </button>
-                                <button type="submit" className="px-4 py-2 bg-primary text-white rounded-md">
-                                    Submit
-                                </button>
+
+                            <div className="flex justify-end space-x-2">
+                                <button type="button" onClick={closePopup} className="bg-gray-500 text-white px-4 py-2 rounded-md">Cancel</button>
+                                <button type="submit" className="bg-primary text-white px-4 py-2 rounded-md">{isEditMode ? 'Save Changes' : 'Create'}</button>
                             </div>
                         </form>
                     </div>
