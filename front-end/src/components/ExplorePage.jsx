@@ -146,6 +146,11 @@ const ExplorePage = () => {
         formData.append('rest_logo', newRestaurant.rest_logo);
         formData.append('rest_banner', newRestaurant.rest_banner);
 
+        if (newRestaurant.seatType.length === 0) {
+            alert('Please create at least one seat type.');
+            return;
+        }
+
         try {
             await axioslib.post('/api/user/createshop', formData, {
                 headers: {
