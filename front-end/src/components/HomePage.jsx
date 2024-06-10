@@ -251,13 +251,13 @@ const HomePage = () => {
 
                             <div>
                                 <label htmlFor="rest_logo" className="block font-medium">Logo</label>
-                                <input type="file" id="rest_logo" name="rest_logo" onChange={handleImageChange} className="w-full border rounded-md px-3 py-2" />
+                                <input required type="file" id="rest_logo" name="rest_logo" onChange={handleImageChange} className="w-full border rounded-md px-3 py-2" />
                                 {imagePreviews.rest_logo && <img src={imagePreviews.rest_logo} alt="Logo Preview" className="mt-2 h-20" />}
                             </div>
 
                             <div>
                                 <label htmlFor="rest_banner" className="block font-medium">Banner</label>
-                                <input type="file" id="rest_banner" name="rest_banner" onChange={handleImageChange} className="w-full border rounded-md px-3 py-2" />
+                                <input required type="file" id="rest_banner" name="rest_banner" onChange={handleImageChange} className="w-full border rounded-md px-3 py-2" />
                                 {imagePreviews.rest_banner && <img src={imagePreviews.rest_banner} alt="Banner Preview" className="mt-2 h-20" />}
                             </div>
 

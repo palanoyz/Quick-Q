@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { axioslib } from '../lib/axioslib';
 import Card from '../components/Card';
 import { inputprovinces } from '../data/inputprovinces';
 import { restTypes } from '../data/resttype';
+import { UserContext } from '../context/UserContext';
 
 const ExplorePage = () => {
     const pageSize = 12;
@@ -31,6 +32,8 @@ const ExplorePage = () => {
         rest_logo: null,
         rest_banner: null,
     });
+
+    const { isLogin } = useContext(UserContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -134,6 +137,11 @@ const ExplorePage = () => {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
 
+        if (!newRestaurant.rest_logo || !newRestaurant.rest_banner) {
+            alert('Please upload both a logo and a banner.');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('rest_name', newRestaurant.rest_name);
         formData.append('rest_type', newRestaurant.rest_type);
@@ -179,8 +187,12 @@ const ExplorePage = () => {
             formData.append('seat_type[]', type);
         });
 
-        if (newRestaurant.rest_logo) formData.append('rest_logo', newRestaurant.rest_logo);
-        if (newRestaurant.rest_banner) formData.append('rest_banner', newRestaurant.rest_banner);
+        if (newRestaurant.rest_logo) {
+            formData.append('rest_logo', newRestaurant.rest_logo);
+        }
+        if (newRestaurant.rest_banner) {
+            formData.append('rest_banner', newRestaurant.rest_banner);
+        }
 
         try {
             await axioslib.put(`/api/user/editshop/${currentEditItem._id}`, formData, {
@@ -260,9 +272,11 @@ const ExplorePage = () => {
                             ))}
                         </select>
 
-                        <button onClick={() => { setIsPopupOpen(true); resetForm(); }} className="border-primary border-2 text-primary hover:bg-primary hover:text-white font-bold py-2 px-4 rounded-full">
-                            New Restaurant
-                        </button>
+                        {isLogin && (  // Conditionally render the button based on login status
+                            <button onClick={() => { setIsPopupOpen(true); resetForm(); }} className="border-primary border-2 text-primary hover:bg-primary hover:text-white font-bold py-2 px-4 rounded-full">
+                                New Restaurant
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -334,13 +348,13 @@ const ExplorePage = () => {
 
                             <div>
                                 <label htmlFor="rest_logo" className="block font-medium">Logo</label>
-                                <input type="file" id="rest_logo" name="rest_logo" accept="image/*" onChange={handleImageChange} className="w-full" />
+                                <input type="file" id="rest_logo" name="rest_logo" accept="image/*" onChange={handleImageChange} className="w-full" required={!isEditMode} />
                                 {imagePreviews.rest_logo && <img src={imagePreviews.rest_logo} alt="Logo Preview" className="mt-2 w-20 h-20 object-cover" />}
                             </div>
 
                             <div>
                                 <label htmlFor="rest_banner" className="block font-medium">Banner</label>
-                                <input type="file" id="rest_banner" name="rest_banner" accept="image/*" onChange={handleImageChange} className="w-full" />
+                                <input type="file" id="rest_banner" name="rest_banner" accept="image/*" onChange={handleImageChange} className="w-full" required={!isEditMode} />
                                 {imagePreviews.rest_banner && <img src={imagePreviews.rest_banner} alt="Banner Preview" className="mt-2 w-full h-32 object-cover" />}
                             </div>
 
