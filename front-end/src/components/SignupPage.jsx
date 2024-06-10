@@ -6,6 +6,7 @@ import { axioslib } from '../lib/axioslib';
 const SignupPage = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState('');
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -32,6 +33,7 @@ const SignupPage = () => {
             navigate('/login');
         } catch (err) {
             console.log(err);
+            setError("username or email already exist");
         }
     };
 
@@ -39,6 +41,7 @@ const SignupPage = () => {
         <div className="flex justify-center items-center h-screen">
             <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
                 <h2 className="text-primary font-bold text-3xl mb-6 text-center">Sign Up</h2>
+                {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
